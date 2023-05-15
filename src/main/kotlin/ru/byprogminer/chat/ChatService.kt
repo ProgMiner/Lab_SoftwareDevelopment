@@ -7,15 +7,18 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
+import kotlin.concurrent.thread
 
 class ChatService(private val username: String) : ChatServiceGrpcKt.ChatServiceCoroutineImplBase() {
 
     override fun connect(requests: Flow<Chat.ChatMessage>): Flow<Chat.ChatMessage> {
-        runBlocking {
-            launch {
-                while (true) {
-                    requests.collect { message ->
-                        println("[${message.date}] ${message.username} : ${message.text}")
+        thread {
+            runBlocking {
+                launch {
+                    while (true) {
+                        requests.collect { message ->
+                            println("[${message.date}] ${message.username} : ${message.text}")
+                        }
                     }
                 }
             }
@@ -31,6 +34,7 @@ class ChatService(private val username: String) : ChatServiceGrpcKt.ChatServiceC
                     .setText(line)
                     .build()
 
+                println("Sending message")
                 emit(message)
             }
         }

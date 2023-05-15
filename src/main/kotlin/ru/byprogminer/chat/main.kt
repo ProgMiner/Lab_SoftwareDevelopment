@@ -6,7 +6,6 @@ import io.grpc.ManagedChannelBuilder
 import io.grpc.ServerBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
@@ -50,16 +49,15 @@ fun runClient(username: String, host: String, port: Int) {
                 .setText(line)
                 .build()
 
+            println("Sending message")
             emit(message)
         }
     })
 
-    runBlocking {
-        launch {
-            while (true) {
-                requestFlow.collect { message ->
-                    println("[${message.date}] ${message.username} : ${message.text}")
-                }
+    runBlocking(Dispatchers.IO) {
+        while (true) {
+            requestFlow.collect { message ->
+                println("[${message.date}] ${message.username} : ${message.text}")
             }
         }
     }
