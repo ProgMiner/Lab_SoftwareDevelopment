@@ -23,8 +23,8 @@ export class Wall implements GameObject {
                 if (this.matrix[i][j]) {
                     drawTexture(wall, context, new Coordinates(
                         center.x + scale.x * j,
-                        center.y - scale.y * (this.matrix.length - i - 1) - scale.y * 0.5,
-                    ), new Coordinates(scale.x, scale.y * 2));
+                        center.y - scale.y * (this.matrix.length - i - 1) - scale.y * 0.25,
+                    ), new Coordinates(scale.x, scale.y * 1.5));
                 }
             }
         }
