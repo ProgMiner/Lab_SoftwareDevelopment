@@ -60,7 +60,7 @@ if (canvas instanceof HTMLCanvasElement) {
         CanvasClearEventHandler,
         InitEventHandler,
         GameWorldEventHandler,
-        GameInterfaceEventHandler,
+        GameInterfaceEventHandler(),
         DebugInfoEventHandler(),
         ChangePreviousUpdateTimeEventHandler,
     );

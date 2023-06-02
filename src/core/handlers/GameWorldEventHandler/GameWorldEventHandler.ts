@@ -6,7 +6,7 @@ import { drawTexture, loadTexture } from '../../../utils/drawTexture';
 import floorTexture from './floor.png';
 
 
-const CAMERA_ACCEL = 4; // px/ms^2
+const CAMERA_SPEED_FACTOR = 4; // px/ms^2
 const CAMERA_MIN_SPEED = 1; // px/ms
 const CAMERA_THRESHOLD = 0.5; // px/ms
 
@@ -67,7 +67,7 @@ export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
 };
 
 const animateCamera = ({ cameraOffset, previousUpdateTime }: State) => {
-    const calcSpeed = cameraOffset.length() / CAMERA_ACCEL;
+    const calcSpeed = cameraOffset.length() / CAMERA_SPEED_FACTOR;
 
     if (!isFinite(calcSpeed) || calcSpeed < CAMERA_THRESHOLD) {
         cameraOffset.x = 0;
@@ -82,14 +82,12 @@ const animateCamera = ({ cameraOffset, previousUpdateTime }: State) => {
     if (Math.abs(cameraOffset.x) < 1) {
         cameraOffset.x = 0;
     } else {
-        console.log(norm.x * speed / timeDelta);
         cameraOffset.x -= norm.x * speed / timeDelta;
     }
 
     if (Math.abs(cameraOffset.y) < 1) {
         cameraOffset.y = 0;
     } else {
-        console.log(norm.y * speed / timeDelta);
         cameraOffset.y -= norm.y * speed / timeDelta;
     }
 }
