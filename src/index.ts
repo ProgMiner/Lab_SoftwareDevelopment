@@ -3,6 +3,7 @@ import { InitEventHandler } from './core/handlers/InitEventHandler';
 import { CanvasClearEventHandler } from './core/handlers/CanvasClearEventHandler';
 import { GameWorldEventHandler } from './core/handlers/GameWorldEventHandler/GameWorldEventHandler';
 import { ChangePreviousUpdateTimeEventHandler } from './core/handlers/ChangePreviousUpdateTimeEventHandler';
+import { GameInterfaceEventHandler } from './core/handlers/GameInterfaceEventHandler';
 import { DebugInfoEventHandler } from './core/handlers/DebugInfoEventHandler';
 import { Coordinates } from './game/Coordinates';
 import { GameWorld } from './game/GameWorld';
@@ -51,6 +52,7 @@ if (canvas instanceof HTMLCanvasElement) {
         CanvasClearEventHandler,
         InitEventHandler,
         GameWorldEventHandler,
+        GameInterfaceEventHandler,
         DebugInfoEventHandler(),
         ChangePreviousUpdateTimeEventHandler,
     );

@@ -1,5 +1,6 @@
 import { GameWorld } from './GameWorld';
 import { Coordinates, MutableCoordinates } from './Coordinates';
+import { Item } from './Item';
 
 
 export interface State {
