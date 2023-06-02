@@ -5,7 +5,10 @@ import { GameWorldEventHandler } from './core/handlers/GameWorldEventHandler/Gam
 import { ChangePreviousUpdateTimeEventHandler } from './core/handlers/ChangePreviousUpdateTimeEventHandler';
 import { GameInterfaceEventHandler } from './core/handlers/GameInterfaceEventHandler';
 import { DebugInfoEventHandler } from './core/handlers/DebugInfoEventHandler';
+import { GoldenApple } from './game/items/GoldenApple/GoldenApple';
+import { DroppedItem } from './game/DroppedItem';
 import { Coordinates } from './game/Coordinates';
+import { Sword } from './game/items/Sword/Sword';
 import { GameWorld } from './game/GameWorld';
 import { Wall } from './game/Wall/Wall';
 import { State } from './game/State';
@@ -29,7 +32,12 @@ const makeGame = (): GameWorld => {
         [true, true, true, true, true, true, true, true],
     ]
 
+    result.objects.unshift(new DroppedItem(new Sword(), new Coordinates(1, 1)));
+    result.objects.unshift(new DroppedItem(new GoldenApple(), new Coordinates(2, 3)));
+
     result.objects.push(wall);
+
+    result.player.health = 4.23;
 
     return result;
 }

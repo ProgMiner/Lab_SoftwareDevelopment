@@ -9,6 +9,8 @@ loadTexture(wall);
 
 export class Wall implements GameObject {
 
+    readonly isPassable = false;
+
     coordinates: Coordinates = new Coordinates(0, 0);
 
     matrix: boolean[][] = [];
