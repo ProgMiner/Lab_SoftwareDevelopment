@@ -6,10 +6,32 @@ import { ChangePreviousUpdateTimeEventHandler } from './core/handlers/ChangePrev
 import { DebugInfoEventHandler } from './core/handlers/DebugInfoEventHandler';
 import { Coordinates } from './game/Coordinates';
 import { GameWorld } from './game/GameWorld';
+import { Wall } from './game/Wall/Wall';
 import { State } from './game/State';
 
 import './index.css';
 
+
+const makeGame = (): GameWorld => {
+    const result = new GameWorld();
+
+    const wall = new Wall();
+    wall.coordinates = new Coordinates(-4, -3);
+    wall.matrix = [
+        [true, true, true, true, true, true, true, true],
+        [true, false, false, false, false, false, false, true],
+        [true, false, false, true, false, false, false, true],
+        [true, false, false, true, false, false, false, true],
+        [true, false, false, true, false, false, false, true],
+        [true, false, true, true, true, false, false, true],
+        [true, false, false, false, false, false, false, true],
+        [true, true, true, true, true, true, true, true],
+    ]
+
+    result.objects.push(wall);
+
+    return result;
+}
 
 const canvas = document.getElementById("canvas");
 
@@ -17,7 +39,7 @@ if (canvas instanceof HTMLCanvasElement) {
     const state: State = {
         canvas,
         context: canvas.getContext('2d')!!,
-        game: new GameWorld(),
+        game: makeGame(),
         darknessRadius: 130,
         scale: new Coordinates(100, 100),
         cameraOffset: new Coordinates(0, 0),

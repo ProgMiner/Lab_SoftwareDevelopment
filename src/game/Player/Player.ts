@@ -1,23 +1,22 @@
-import { Coordinates } from '../Coordinates';
-import { Drawable } from '../Drawable';
-import { Collider } from '../Collider';
 import { drawTexture, loadTexture } from '../../utils/drawTexture';
+import { Coordinates } from '../Coordinates';
+import { GameObject } from '../GameObject';
 
-import obama from './obama.png';
+import person from './person.png';
 
 
-loadTexture(obama);
+loadTexture(person);
 
-export class Player implements Drawable, Collider {
+export class Player implements GameObject {
 
     coordinates: Coordinates = new Coordinates(0, 0);
 
     draw(
         context: CanvasRenderingContext2D,
-        place: Coordinates,
+        center: Coordinates,
         scale: Coordinates,
     ): void {
-        drawTexture(obama, context, place, scale);
+        drawTexture(person, context, center, scale);
     }
 
     collides(point: Coordinates): boolean {

@@ -16,23 +16,31 @@ export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
     if (event.type === 'keyDown') {
         switch (event.event.code) {
             case 'KeyW':
-                state.game.movePlayer(new Coordinates(0, 1));
-                state.cameraOffset.y -= state.scale.y;
+                if (state.game.movePlayer(new Coordinates(0, 1))) {
+                    state.cameraOffset.y -= state.scale.y;
+                }
+
                 break;
 
             case 'KeyA':
-                state.game.movePlayer(new Coordinates(-1, 0));
-                state.cameraOffset.x -= state.scale.x;
+                if (state.game.movePlayer(new Coordinates(-1, 0))) {
+                    state.cameraOffset.x -= state.scale.x;
+                }
+
                 break;
 
             case 'KeyS':
-                state.game.movePlayer(new Coordinates(0, -1));
-                state.cameraOffset.y += state.scale.y;
+                if (state.game.movePlayer(new Coordinates(0, -1))) {
+                    state.cameraOffset.y += state.scale.y;
+                }
+
                 break;
 
             case 'KeyD':
-                state.game.movePlayer(new Coordinates(1, 0));
-                state.cameraOffset.x += state.scale.x;
+                if (state.game.movePlayer(new Coordinates(1, 0))) {
+                    state.cameraOffset.x += state.scale.x;
+                }
+
                 break;
         }
     }

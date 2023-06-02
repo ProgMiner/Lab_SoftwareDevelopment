@@ -5,7 +5,7 @@ export interface Drawable {
 
     draw(
         context: CanvasRenderingContext2D,
-        place: Coordinates,
+        center: Coordinates,
         scale: Coordinates,
     ): void;
 }
