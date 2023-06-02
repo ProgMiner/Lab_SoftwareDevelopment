@@ -1,0 +1,9 @@
+import { EventHandler } from '../events/EventBus';
+import { State } from '../../game/State';
+
+
+export const CanvasClearEventHandler: EventHandler<State> = ({ canvas, context }, { type }) => {
+    if (type === 'tick') {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+};
