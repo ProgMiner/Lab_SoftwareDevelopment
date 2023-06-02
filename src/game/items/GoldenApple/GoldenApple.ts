@@ -15,8 +15,11 @@ export class GoldenApple extends TexturedItem {
         super(texture);
     }
 
-    useItem(world: GameWorld): boolean {
-        world.player.healOn(HEALING_FACTOR);
-        return true;
+    useItem(world: GameWorld): GoldenApple | undefined {
+        if (world.player.healOn(HEALING_FACTOR)) {
+            return undefined;
+        }
+
+        return this;
     }
 }

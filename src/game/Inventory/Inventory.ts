@@ -10,6 +10,8 @@ import selectedItemTexture from './selected_item.png';
 
 
 export const INVENTORY_SIZE = 9;
+export const ITEM_SCALE_FACTOR = 56 / 64;
+const SELECTED_ITEM_SCALE_FACTOR = 68 / 64;
 
 loadTexture(inventoryTexture);
 loadTexture(selectedItemTexture);
@@ -41,9 +43,7 @@ export class Inventory implements Drawable {
             return;
         }
 
-        if (item.useItem(world)) {
-            this.items[this.selectedItem] = undefined;
-        }
+        this.items[this.selectedItem] = item.useItem(world);
     }
 
     dropSelectedItem(world: GameWorld) {
@@ -71,14 +71,14 @@ export class Inventory implements Drawable {
             selectedItemTexture,
             context,
             new Coordinates(firstItemPosition.x + this.selectedItem * scale.x, firstItemPosition.y),
-            new Coordinates(scale.x * 68 / 64, scale.y * 68 / 64),
+            new Coordinates(scale.x * SELECTED_ITEM_SCALE_FACTOR, scale.y * SELECTED_ITEM_SCALE_FACTOR),
         );
 
         for (let i = 0; i < INVENTORY_SIZE; ++i) {
             this.items[i]?.draw(
                 context,
                 new Coordinates(firstItemPosition.x + i * scale.x, firstItemPosition.y),
-                new Coordinates(scale.x * 56 / 64, scale.y * 56 / 64),
+                new Coordinates(scale.x * ITEM_SCALE_FACTOR, scale.y * ITEM_SCALE_FACTOR),
             );
         }
     }

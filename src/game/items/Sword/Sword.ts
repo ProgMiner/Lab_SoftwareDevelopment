@@ -1,19 +1,15 @@
 import { loadTexture } from '../../../utils/drawTexture';
-import { TexturedItem } from '../TexturedItem';
-import { GameWorld } from '../../GameWorld';
+import { AbstractEquipment } from '../AbstractEquipment';
+import { EquipmentType } from '../Equipment';
 
 import texture from './sword.png';
 
 
 loadTexture(texture);
 
-export class Sword extends TexturedItem {
+export class Sword extends AbstractEquipment {
 
     constructor() {
-        super(texture);
-    }
-
-    useItem(world: GameWorld): boolean {
-        return false;
+        super(texture, EquipmentType.SWORD, 5);
     }
 }

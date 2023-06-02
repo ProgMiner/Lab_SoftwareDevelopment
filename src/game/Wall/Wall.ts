@@ -21,8 +21,10 @@ export class Wall implements GameObject {
         scale: Coordinates,
     ): void {
         for (let i = 0; i < this.matrix.length; ++i) {
-            for (let j = 0; j < this.matrix[i].length; ++j) {
-                if (this.matrix[i][j]) {
+            const row = this.matrix[i]!!;
+
+            for (let j = 0; j < row.length; ++j) {
+                if (row[j]) {
                     drawTexture(wall, context, new Coordinates(
                         center.x + scale.x * j,
                         center.y - scale.y * (this.matrix.length - i - 1) - scale.y * 0.25,
@@ -37,8 +39,10 @@ export class Wall implements GameObject {
         const j = point.x - this.coordinates.x;
 
         if (i >= 0 && i < this.matrix.length) {
-            if (j >= 0 && j < this.matrix[i].length) {
-                return this.matrix[i][j];
+            const row = this.matrix[i]!!;
+
+            if (j >= 0 && j < row.length) {
+                return row[j]!!;
             }
         }
 

@@ -9,7 +9,7 @@ export interface Item extends Drawable {
      *
      * @param world game world
      *
-     * @return is item used and must be removed from inventory
+     * @return what item must be placed instead of this
      */
-    useItem(world: GameWorld): boolean;
+    useItem(world: GameWorld): Item | undefined;
 }

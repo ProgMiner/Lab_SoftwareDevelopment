@@ -1,4 +1,10 @@
 
+/* noinspection CssUnknownTarget */
+@import url(https://fonts.googleapis.com/css2?family=Roboto&display=swap);
+
+/* noinspection CssUnknownTarget */
+@import url(https://fonts.googleapis.com/css2?family=Noto+Colr+Emoji+Glyf);
+
 html, body {
     width: 100vw;
     height: 100vh;

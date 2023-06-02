@@ -16,5 +16,5 @@ export abstract class TexturedItem implements Item {
         drawTexture(this.texture, context, center, scale);
     }
 
-    abstract useItem(world: GameWorld): boolean;
+    abstract useItem(world: GameWorld): Item | undefined;
 }

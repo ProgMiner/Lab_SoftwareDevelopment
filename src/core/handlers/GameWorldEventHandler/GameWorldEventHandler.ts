@@ -7,7 +7,7 @@ import floorTexture from './floor.png';
 
 
 const CAMERA_SPEED_FACTOR = 4; // px/ms^2
-const CAMERA_MIN_SPEED = 1; // px/ms
+const CAMERA_MIN_SPEED = 25; // px/ms
 const CAMERA_THRESHOLD = 0.5; // px/ms
 
 loadTexture(floorTexture);
