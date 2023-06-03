@@ -46,15 +46,17 @@ export class GameWorld implements Drawable {
             this.player.coordinates.y + direction.y,
         );
 
-        if (this.checkCollisionWithObjects(newPosition) !== null) {
+        if (this.checkCollisionWithObjects(newPosition).length > 0) {
             return false;
         }
 
         this.player.coordinates = newPosition;
 
-        const trigger = this.checkCollisionWithObjects(newPosition, false);
-        if (trigger !== null && isTrigger(trigger)) {
-            trigger.onStep(this);
+        const triggers = this.checkCollisionWithObjects(newPosition, false);
+        for (const trigger of triggers) {
+            if (isTrigger(trigger)) {
+                trigger.onStep(this);
+            }
         }
 
         return true;
@@ -73,12 +75,14 @@ export class GameWorld implements Drawable {
 
             object.draw(context, new Coordinates(
                 center.x + coords.x * scale.x,
-                center.y - coords.y * scale.y,
+                center.y + coords.y * scale.y,
             ), scale);
         }
     }
 
     checkCollisionWithObjects(point: Coordinates, onlyImpassable: boolean = true) {
+        let result: GameObject[] = [];
+
         for (const object of this.objects) {
             if (onlyImpassable) {
                 if (object.isPassable) {
@@ -87,10 +91,10 @@ export class GameWorld implements Drawable {
             }
 
             if (object.collides(point)) {
-                return object;
+                result.push(object);
             }
         }
 
-        return null;
+        return result;
     }
 }

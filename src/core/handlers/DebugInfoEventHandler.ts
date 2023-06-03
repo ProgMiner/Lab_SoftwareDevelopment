@@ -41,7 +41,7 @@ export const DebugInfoEventHandler: () => EventHandler<State> = () => {
         drawText(ctx, ''
             + `Time delta: ${Math.round(timeDelta)}\n`
             + `Ticks per second: ${Math.round(1000 / timeDelta)}\n`
-            + `Player position: ${state.game.player.coordinates}\n`
+            + `Player position: ${state.world.player.coordinates}\n`
             + `Camera offset: ${state.cameraOffset}\n`
             + `Pressed key: ${lastPressedKey}\n`
             + '', 5, 5);

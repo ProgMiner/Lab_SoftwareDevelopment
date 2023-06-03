@@ -27,7 +27,7 @@ export class Wall implements GameObject {
                 if (row[j]) {
                     drawTexture(wall, context, new Coordinates(
                         center.x + scale.x * j,
-                        center.y - scale.y * (this.matrix.length - i - 1) - scale.y * 0.25,
+                        center.y + scale.y * i - scale.y * 0.25,
                     ), new Coordinates(scale.x, scale.y * 1.5));
                 }
             }
@@ -35,7 +35,7 @@ export class Wall implements GameObject {
     }
 
     collides(point: Coordinates): boolean {
-        const i = this.matrix.length - point.y + this.coordinates.y - 1;
+        const i = point.y - this.coordinates.y;
         const j = point.x - this.coordinates.x;
 
         if (i >= 0 && i < this.matrix.length) {

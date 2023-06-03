@@ -5,7 +5,11 @@ import { GameWorldEventHandler } from './core/handlers/GameWorldEventHandler/Gam
 import { ChangePreviousUpdateTimeEventHandler } from './core/handlers/ChangePreviousUpdateTimeEventHandler';
 import { GameInterfaceEventHandler } from './core/handlers/GameInterfaceEventHandler';
 import { DebugInfoEventHandler } from './core/handlers/DebugInfoEventHandler';
+import { UniformItemGenerator } from './game/generators/UniformItemGenerator';
+import { BoxedWorldGenerator } from './game/generators/BoxedWorldGenerator';
 import { GoldenApple } from './game/items/GoldenApple/GoldenApple';
+import { constGenerator } from './game/generators/Generator';
+import { seededRandom } from './utils/seededRandom';
 import { DroppedItem } from './game/DroppedItem';
 import { Coordinates } from './game/Coordinates';
 import { Sword } from './game/items/Sword/Sword';
@@ -16,7 +20,7 @@ import { State } from './game/State';
 import './index.css';
 
 
-const makeGame = (): GameWorld => {
+const makeGame1 = (): GameWorld => {
     const result = new GameWorld();
 
     const wall = new Wall();
@@ -42,13 +46,20 @@ const makeGame = (): GameWorld => {
     return result;
 }
 
+const makeGame2 = async () => {
+    return new BoxedWorldGenerator(5, 2, new Coordinates(6, 5), new UniformItemGenerator([
+        [constGenerator(() => new Sword()), 1],
+        [constGenerator(() => new GoldenApple()), 1],
+    ])).generate(seededRandom('' + performance.now()));
+}
+
 const canvas = document.getElementById("canvas");
 
 if (canvas instanceof HTMLCanvasElement) {
     const state: State = {
         canvas,
         context: canvas.getContext('2d')!!,
-        game: makeGame(),
+        world: new GameWorld(),
         darknessRadius: 130,
         scale: new Coordinates(100, 100),
         cameraOffset: new Coordinates(0, 0),
@@ -64,6 +75,14 @@ if (canvas instanceof HTMLCanvasElement) {
         DebugInfoEventHandler(),
         ChangePreviousUpdateTimeEventHandler,
     );
+
+    // state.world = makeGame1();
+
+    makeGame2().then(world => {
+        state.world = world;
+
+        eventBus({ type: 'tick' });
+    });
 
     window.onload = (event) => {
         eventBus({ type: 'load', event });

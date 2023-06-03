@@ -43,9 +43,9 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
         }
     };
 
-    return ({ canvas, context, game, previousUpdateTime }, event) => {
+    return ({ canvas, context, world, previousUpdateTime }, event) => {
         if (event.type === 'keyDown') {
-            const oldSelectedItem = game.player.inventory.selectedItem;
+            const oldSelectedItem = world.player.inventory.selectedItem;
             let newSelectedItem = oldSelectedItem;
 
             switch (event.event.code) {
@@ -94,21 +94,21 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
                     break;
             }
 
-            game.player.inventory.selectedItem = newSelectedItem;
+            world.player.inventory.selectedItem = newSelectedItem;
 
             if (event.event.code === 'Enter') {
-                game.player.inventory.useSelectedItem(game);
+                world.player.inventory.useSelectedItem(world);
             }
 
             if (event.event.code === 'Backspace') {
-                game.player.inventory.dropSelectedItem(game);
+                world.player.inventory.dropSelectedItem(world);
             }
         }
 
         if (event.type === 'tick') {
-            animateHealthBar(game.player, previousUpdateTime);
+            animateHealthBar(world.player, previousUpdateTime);
 
-            game.player.inventory.draw(
+            world.player.inventory.draw(
                 context,
                 new Coordinates(canvas.width / 2, canvas.height - INVENTORY_SCALE / 2 - GAP),
                 new Coordinates(INVENTORY_SCALE, INVENTORY_SCALE),
@@ -116,7 +116,7 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
 
             drawHealthBar(healthBarValue, canvas, context);
 
-            drawEquipment(game.player, canvas, context);
+            drawEquipment(world.player, canvas, context);
 
             context.save();
 
@@ -124,9 +124,9 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
             context.font = STATS_FONT;
             drawText(
                 context,
-                `❤ ${game.player.health} / ${game.player.maxHealth}  |  `
-                + `👊 ${game.player.actualDamage()}  |  `
-                + `🛡️ ${game.player.actualArmor()}`,
+                `❤ ${world.player.health} / ${world.player.maxHealth}  |  `
+                + `👊 ${world.player.actualDamage()}  |  `
+                + `🛡️ ${world.player.actualArmor()}`,
                 canvas.width / 2,
                 canvas.height - INVENTORY_SCALE - 3 * GAP - HEALTH_BAR_HEIGHT - STATS_HEIGHT,
                 { centerWidth: true },

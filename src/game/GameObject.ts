@@ -8,7 +8,7 @@ export interface GameObject extends Drawable, Collider {
     /**
      * Left top cell of object
      */
-    readonly coordinates: Coordinates;
+    coordinates: Coordinates;
 
     /**
      * Could player step on

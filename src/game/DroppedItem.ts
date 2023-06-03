@@ -14,7 +14,7 @@ export class DroppedItem implements Trigger {
 
     readonly item: Item;
 
-    readonly coordinates: Coordinates;
+    coordinates: Coordinates;
 
     constructor(item: Item, coordinates: Coordinates) {
         this.item = item;

@@ -23,7 +23,7 @@
         // "removeComments": true,                /* Do not emit comments to output. */
         // "noEmit": true,                        /* Do not emit outputs. */
         // "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
-        // "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
+         "downlevelIteration": true,              /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
         // "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
 
         /* Strict Type-Checking Options */
@@ -74,11 +74,8 @@
         // "lib": [],                             /* Specify library files to be included in the compilation. */
         /* Disallow inconsistently-cased references to the same file. */
         "lib": [
-            "decorators",
             "dom",
-            "es5",
-            "scripthost",
-            "es2015.collection"
+            "es2019",
         ]
     }
 }

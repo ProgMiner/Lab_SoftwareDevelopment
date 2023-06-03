@@ -16,28 +16,28 @@ export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
     if (event.type === 'keyDown') {
         switch (event.event.code) {
             case 'KeyW':
-                if (state.game.movePlayer(new Coordinates(0, 1))) {
+                if (state.world.movePlayer(new Coordinates(0, -1))) {
                     state.cameraOffset.y -= state.scale.y;
                 }
 
                 break;
 
             case 'KeyA':
-                if (state.game.movePlayer(new Coordinates(-1, 0))) {
+                if (state.world.movePlayer(new Coordinates(-1, 0))) {
                     state.cameraOffset.x -= state.scale.x;
                 }
 
                 break;
 
             case 'KeyS':
-                if (state.game.movePlayer(new Coordinates(0, -1))) {
+                if (state.world.movePlayer(new Coordinates(0, 1))) {
                     state.cameraOffset.y += state.scale.y;
                 }
 
                 break;
 
             case 'KeyD':
-                if (state.game.movePlayer(new Coordinates(1, 0))) {
+                if (state.world.movePlayer(new Coordinates(1, 0))) {
                     state.cameraOffset.x += state.scale.x;
                 }
 
@@ -60,7 +60,7 @@ export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
             state.scale,
         );
 
-        state.game.draw(state.context, cameraPosition, state.scale);
+        state.world.draw(state.context, cameraPosition, state.scale);
 
         drawDarkness(state);
     }

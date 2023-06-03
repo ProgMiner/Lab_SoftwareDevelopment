@@ -6,8 +6,11 @@
         "start": "webpack serve --mode=development -d eval-source-map"
     },
     "license": "MIT",
-    "dependencies": {},
+    "dependencies": {
+        "random": "^4.1.0"
+    },
     "devDependencies": {
+        "@types/seedrandom": "^3.0.5",
         "css-loader": "^6.8.1",
         "style-loader": "^3.3.3",
         "ts-loader": "^9.4.3",

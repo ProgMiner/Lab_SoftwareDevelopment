@@ -7,7 +7,7 @@ export interface State {
     readonly canvas: HTMLCanvasElement;
     readonly context: CanvasRenderingContext2D;
 
-    readonly game: GameWorld;
+    world: GameWorld;
 
     darknessRadius: number;
     scale: Coordinates;
