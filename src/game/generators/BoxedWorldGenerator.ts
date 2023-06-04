@@ -200,6 +200,7 @@ export class BoxedWorldGenerator implements WorldGenerator {
                 }
             }
 
+            // switch context to prevent UI lags
             await delayPromise();
         }
 

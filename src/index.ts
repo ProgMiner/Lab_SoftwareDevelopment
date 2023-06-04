@@ -7,6 +7,7 @@ import { GameInterfaceEventHandler } from './core/handlers/GameInterfaceEventHan
 import { DebugInfoEventHandler } from './core/handlers/DebugInfoEventHandler';
 import { UniformItemGenerator } from './game/generators/UniformItemGenerator';
 import { BoxedWorldGenerator } from './game/generators/BoxedWorldGenerator';
+import { FileWorldGenerator } from './game/generators/FileWorldGenerator';
 import { GoldenApple } from './game/items/GoldenApple/GoldenApple';
 import { constGenerator } from './game/generators/Generator';
 import { seededRandom } from './utils/seededRandom';
@@ -17,6 +18,7 @@ import { GameWorld } from './game/GameWorld';
 import { Wall } from './game/Wall/Wall';
 import { State } from './game/State';
 
+import world from './worlds/test.world';
 import './index.css';
 
 
@@ -53,6 +55,10 @@ const makeGame2 = async () => {
     ])).generate(seededRandom('' + performance.now()));
 }
 
+const makeGame3 = async () => {
+    return (await FileWorldGenerator.loadFile(world)).generate();
+};
+
 const canvas = document.getElementById("canvas");
 
 if (canvas instanceof HTMLCanvasElement) {
@@ -78,7 +84,7 @@ if (canvas instanceof HTMLCanvasElement) {
 
     // state.world = makeGame1();
 
-    makeGame2().then(world => {
+    makeGame3().then(world => {
         state.world = world;
 
         eventBus({ type: 'tick' });
