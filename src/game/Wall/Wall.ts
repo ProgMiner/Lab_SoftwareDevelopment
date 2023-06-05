@@ -17,6 +17,8 @@ export class Wall implements GameObject {
 
     /**
      * Walls matrix, value is `true` if wall is on cell, `false` otherwise
+     *
+     * Must be rectangle (all rows has same length)
      */
     matrix: boolean[][] = [];
 
@@ -36,8 +38,56 @@ export class Wall implements GameObject {
     }
 
     collides(point: Coordinates): boolean {
-        const i = point.y - this.coordinates.y;
-        const j = point.x - this.coordinates.x;
+        return this.getMatrixValueByCoordinates(point) ?? false;
+    }
+
+    needUpdate(playerPosition: Coordinates, updateDistance: number): boolean {
+        if (this.getMatrixValueByCoordinates(playerPosition) !== undefined) {
+            return true;
+        }
+
+        const width = this.matrix[0]?.length ?? 0;
+        const height = this.matrix.length;
+
+        let minDistance: number;
+        if (playerPosition.x < this.coordinates.x) {
+            if (playerPosition.y < this.coordinates.y) {
+                minDistance = playerPosition.vectorTo(this.coordinates).length();
+            } else if (playerPosition.y < this.coordinates.y + height) {
+                minDistance = this.coordinates.x - playerPosition.x;
+            } else {
+                minDistance = playerPosition.vectorTo(new Coordinates(
+                    this.coordinates.x,
+                    this.coordinates.y + height,
+                )).length();
+            }
+        } else if (playerPosition.x < this.coordinates.x + width) {
+            minDistance = Math.min(
+                Math.abs(this.coordinates.y - playerPosition.y),
+                Math.abs(this.coordinates.y + height - playerPosition.y),
+            );
+        } else {
+            if (playerPosition.y < this.coordinates.y) {
+                minDistance = playerPosition.vectorTo(new Coordinates(
+                    this.coordinates.x + width,
+                    this.coordinates.y,
+                )).length();
+            } else if (playerPosition.y < this.coordinates.y + height) {
+                minDistance = this.coordinates.x + width - playerPosition.x;
+            } else {
+                minDistance = playerPosition.vectorTo(new Coordinates(
+                    this.coordinates.x + width,
+                    this.coordinates.y + height,
+                )).length();
+            }
+        }
+
+        return minDistance < updateDistance;
+    }
+
+    private getMatrixValueByCoordinates(coordinates: Coordinates): boolean | undefined {
+        const i = coordinates.y - this.coordinates.y;
+        const j = coordinates.x - this.coordinates.x;
 
         if (i >= 0 && i < this.matrix.length) {
             const row = this.matrix[i]!!;
@@ -46,7 +96,5 @@ export class Wall implements GameObject {
                 return row[j]!!;
             }
         }
-
-        return false;
     }
 }

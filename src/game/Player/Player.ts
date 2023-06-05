@@ -147,4 +147,8 @@ export class Player implements GameObject {
     collides(point: Coordinates): boolean {
         return point.equals(this.coordinates);
     }
+
+    needUpdate(): boolean {
+        return true;
+    }
 }

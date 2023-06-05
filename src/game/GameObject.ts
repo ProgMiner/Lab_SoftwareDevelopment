@@ -19,4 +19,14 @@ export interface GameObject extends Drawable, Collider {
      * Could player step on (or in)
      */
     readonly isPassable: boolean;
+
+    /**
+     * Check is object in update distance
+     *
+     * @param playerPosition current player position
+     * @param updateDistance maximum distance allowed to update
+     *
+     * @return is needed to update
+     */
+    needUpdate(playerPosition: Coordinates, updateDistance: number): boolean;
 }

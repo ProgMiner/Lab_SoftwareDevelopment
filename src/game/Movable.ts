@@ -14,3 +14,7 @@ export interface Movable extends GameObject {
      */
     onMove(world: GameWorld): void;
 }
+
+export const isMovable = (object: GameObject): object is Movable => {
+    return 'onMove' in object;
+};

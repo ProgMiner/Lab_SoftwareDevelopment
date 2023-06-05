@@ -41,6 +41,17 @@ export class Coordinates {
     }
 
     /**
+     * Returns vector from `this` to `that`
+     *
+     * @param that destination of vector
+     *
+     * @return result vector
+     */
+    vectorTo(that: Coordinates): Coordinates {
+        return new Coordinates(that.x - this.x, that.y - this.y);
+    }
+
+    /**
      * Check is equals to other coordinates object
      *
      * @param that object to check with

@@ -3,6 +3,7 @@ import { EventBus } from '../core/events/EventBus';
 import { GameObject } from './GameObject';
 import { Player } from './Player/Player';
 import { isTrigger } from './Trigger';
+import { isMovable } from './Movable';
 import { Drawable } from './Drawable';
 
 
@@ -30,6 +31,11 @@ export class GameWorld implements Drawable {
      * Player
      */
     player: Player = new Player();
+
+    /**
+     * Maximum distance from player to object where object could be updated
+     */
+    updateDistance: number = 0;
 
     private readonly _eventBus: EventBus;
 
@@ -110,6 +116,16 @@ export class GameWorld implements Drawable {
             }
         }
 
+        for (const object of this.objects) {
+            if (!object.needUpdate(newPosition, this.updateDistance)) {
+                continue;
+            }
+
+            if (isMovable(object)) {
+                object.onMove(this);
+            }
+        }
+
         return true;
     }
 
@@ -128,10 +144,11 @@ export class GameWorld implements Drawable {
 
     draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void {
         for (const object of this.objects) {
-            const coords = new Coordinates(
-                object.coordinates.x - this.player.coordinates.x,
-                object.coordinates.y - this.player.coordinates.y,
-            );
+            if (!object.needUpdate(this.player.coordinates, this.updateDistance)) {
+                continue;
+            }
+
+            const coords = this.player.coordinates.vectorTo(object.coordinates);
 
             object.draw(context, new Coordinates(
                 center.x + coords.x * scale.x,

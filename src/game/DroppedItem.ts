@@ -35,6 +35,10 @@ export class DroppedItem implements Trigger {
         }
     }
 
+    needUpdate(playerPosition: Coordinates, updateDistance: number): boolean {
+        return playerPosition.vectorTo(this.coordinates).length() <= updateDistance;
+    }
+
     collides(point: Coordinates): boolean {
         return this.coordinates.equals(point);
     }

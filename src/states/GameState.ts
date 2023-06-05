@@ -41,6 +41,11 @@ export interface BaseGameState<State extends GameStateState> extends BaseState<S
     scale: Coordinates;
 
     /**
+     * Maximum distance from object to player where object will be updated
+     */
+    updateDistance: number;
+
+    /**
      * Current offset of camera, used for camera animation
      */
     readonly cameraOffset: MutableCoordinates;

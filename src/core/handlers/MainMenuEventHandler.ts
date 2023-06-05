@@ -68,6 +68,7 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event, eventBus
             world: new GameWorld(eventBus),
             darknessRadius: 130,
             scale: new Coordinates(100, 100),
+            updateDistance: 10,
             cameraOffset: new Coordinates(0, 0),
         };
 

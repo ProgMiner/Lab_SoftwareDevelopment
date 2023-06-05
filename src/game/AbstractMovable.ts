@@ -32,5 +32,9 @@ export abstract class AbstractMovable implements Movable {
         return this.coordinates.equals(point);
     }
 
+    needUpdate(playerPosition: Coordinates, updateDistance: number): boolean {
+        return playerPosition.vectorTo(this.coordinates).length() <= updateDistance;
+    }
+
     abstract onMove(world: GameWorld): void;
 }
