@@ -17,8 +17,6 @@ export interface GameObject extends Drawable, Collider {
 
     /**
      * Could player step on (or in)
-     *
-     * TODO replace with result of {@link GameObject.collides} call
      */
     readonly isPassable: boolean;
 }
