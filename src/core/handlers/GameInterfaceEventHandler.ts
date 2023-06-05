@@ -139,9 +139,11 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
         }
 
         if (event.type === 'tick') {
-            animateHealthBar(world.player, previousUpdateTime);
+            const { player } = world;
 
-            world.player.inventory.draw(
+            animateHealthBar(player, previousUpdateTime);
+
+            player.inventory.draw(
                 context,
                 new Coordinates(canvas.width / 2, canvas.height - INVENTORY_SCALE / 2 - GAP),
                 new Coordinates(INVENTORY_SCALE, INVENTORY_SCALE),
@@ -155,7 +157,7 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
                 HEALTH_BAR_COLOR,
             );
 
-            drawEquipment(world.player, canvas, context);
+            drawEquipment(player, canvas, context);
 
             context.save();
 
@@ -163,9 +165,10 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
             context.font = STATS_FONT;
             drawText(
                 context,
-                `❤ ${formatNumber(world.player.health)} / ${formatNumber(world.player.maxHealth)}  |  `
-                + `👊 ${formatNumber(world.player.actualDamage)}  |  `
-                + `🛡️ ${formatNumber(world.player.actualArmor)}`,
+                `❤ ${formatNumber(player.health)} / ${formatNumber(player.maxHealth)}  |  `
+                + `👊 ${formatNumber(player.actualDamage)}  |  `
+                + `🛡️ ${formatNumber(player.actualArmor)}  |  `
+                + `✨ ${formatNumber(player.xp)}`,
                 canvas.width / 2,
                 canvas.height - INVENTORY_SCALE - 3 * GAP - HEALTH_BAR_HEIGHT - STATS_HEIGHT,
                 { centerWidth: true },
