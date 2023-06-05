@@ -1,7 +1,7 @@
 import { INVENTORY_SIZE, ITEM_SCALE_FACTOR } from '../../game/Inventory/Inventory';
 import { Equipment, EquipmentType } from '../../game/items/Equipment';
 import { drawText, EMOJI_FONT_FAMILY } from '../../utils/drawText';
-import { Coordinates } from '../../game/Coordinates';
+import { Coordinates } from '../../utils/Coordinates';
 import { Player } from '../../game/Player/Player';
 import { EventHandler } from '../events/EventBus';
 import { State } from '../../game/State';
@@ -16,6 +16,14 @@ const STATS_FONT = `${STATS_HEIGHT}px ${EMOJI_FONT_FAMILY}`;
 
 const HEALTH_BAR_ANIMATION_SPEED = 0.01; // 1/ms
 
+/**
+ * Event handler that show game UI
+ *
+ * Handles {@link KeyDownEvent}:
+ * - digits/left arrow/right arrow - change selected inventory slot
+ * - Enter - use selected item
+ * - Backspace - drop selected item in world (on current cell)
+ */
 export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
     let healthBarValue = 0;
 

@@ -1,17 +1,22 @@
+import { Coordinates } from '../utils/Coordinates';
 import { Drawable } from './Drawable';
 import { Collider } from './Collider';
-import { Coordinates } from './Coordinates';
 
 
+/**
+ * Game object
+ *
+ * Any object that can be in game world
+ */
 export interface GameObject extends Drawable, Collider {
 
     /**
-     * Left top cell of object
+     * Left top cell of object in world coordinates
      */
     coordinates: Coordinates;
 
     /**
-     * Could player step on
+     * Could player step on (or in)
      */
     readonly isPassable: boolean;
 }

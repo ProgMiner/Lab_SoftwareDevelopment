@@ -9,6 +9,11 @@ const HEALING_FACTOR = 0.2;
 
 loadTexture(texture);
 
+/**
+ * Golden apple
+ *
+ * When used, heals player on 0.2 points of maximum health
+ */
 export class GoldenApple extends TexturedItem {
 
     constructor() {

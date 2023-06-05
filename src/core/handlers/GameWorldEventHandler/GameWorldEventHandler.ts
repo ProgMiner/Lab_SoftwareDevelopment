@@ -1,6 +1,6 @@
 import { EventHandler } from '../../events/EventBus';
 import { State } from '../../../game/State';
-import { Coordinates } from '../../../game/Coordinates';
+import { Coordinates } from '../../../utils/Coordinates';
 import { drawTexture, loadTexture } from '../../../utils/drawTexture';
 
 import floorTexture from './floor.png';
@@ -12,6 +12,12 @@ const CAMERA_THRESHOLD = 0.5; // px/ms
 
 loadTexture(floorTexture);
 
+/**
+ * Event handler that allows player to interact with game world
+ *
+ * Handles {@link KeyDownEvent}:
+ * - W/A/S/D - move player up/left/down/right
+ */
 export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
     if (event.type === 'keyDown') {
         switch (event.event.code) {

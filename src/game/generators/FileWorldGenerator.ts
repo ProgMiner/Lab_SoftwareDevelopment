@@ -1,6 +1,6 @@
 import { GoldenApple } from '../items/GoldenApple/GoldenApple';
+import { Coordinates } from '../../utils/Coordinates';
 import { WorldGenerator } from './Generator';
-import { Coordinates } from '../Coordinates';
 import { DroppedItem } from '../DroppedItem';
 import { Sword } from '../items/Sword/Sword';
 import { GameObject } from '../GameObject';
@@ -18,7 +18,7 @@ import { Wall } from '../Wall/Wall';
  *   - `W` -- wall
  *   - `.` -- empty
  *   - integer number -- "hole"
- * - several lines, started with integer number and dot (`.`), "hole fillers"
+ * - several lines, started with integer number and dot (`.`), "hole filler"
  *   after dot (maybe after some spaces) must be filler name, and after data for filler
  *
  * Syntax of hole fillers: `<index>. <name> [data]\n`
@@ -36,6 +36,9 @@ export class FileWorldGenerator implements WorldGenerator {
     private wall!: Wall;
     private playerPosition: Coordinates = new Coordinates(0, 0);
 
+    /**
+     * @param content content of file to parse
+     */
     constructor(content: string) {
         this.parseFile(content);
     }

@@ -7,6 +7,11 @@ import texture from './sword.png';
 
 loadTexture(texture);
 
+/**
+ * Sword
+ *
+ * When equipped, increases player's damage on 5 points
+ */
 export class Sword extends AbstractEquipment {
 
     constructor() {

@@ -1,8 +1,11 @@
 import { EventHandler } from '../events/EventBus';
-import { State } from '../../game/State';
 import { drawText } from '../../utils/drawText';
+import { State } from '../../game/State';
 
 
+/**
+ * Event handler that shows debug panel on F3 key
+ */
 export const DebugInfoEventHandler: () => EventHandler<State> = () => {
     let show = false;
 

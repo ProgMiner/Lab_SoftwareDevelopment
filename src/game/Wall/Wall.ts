@@ -1,5 +1,5 @@
 import { drawTexture, loadTexture } from '../../utils/drawTexture';
-import { Coordinates } from '../Coordinates';
+import { Coordinates } from '../../utils/Coordinates';
 import { GameObject } from '../GameObject';
 
 import wall from './wall.png';
@@ -7,12 +7,18 @@ import wall from './wall.png';
 
 loadTexture(wall);
 
+/**
+ * Impassable object of complex shape
+ */
 export class Wall implements GameObject {
 
     readonly isPassable = false;
 
     coordinates: Coordinates = new Coordinates(0, 0);
 
+    /**
+     * Walls matrix, value is `true` if wall is on cell, `false` otherwise
+     */
     matrix: boolean[][] = [];
 
     draw(

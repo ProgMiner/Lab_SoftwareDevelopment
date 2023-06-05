@@ -1,24 +1,32 @@
-import { Coordinates } from './Coordinates';
-import { GameObject } from './GameObject';
-import { Item } from './items/Item';
-import { Trigger } from './Trigger';
-import { Player } from './Player/Player';
+import { Coordinates } from '../utils/Coordinates';
 import { GameWorld } from './GameWorld';
+import { Trigger } from './Trigger';
+import { Item } from './items/Item';
 
 
 const ITEM_SCALE_FACTOR = 0.5;
 
+/**
+ * Dropped item object
+ *
+ * When player steps on, tries to pick item and self-remove on success
+ *
+ * @see Inventory.pickItem
+ */
 export class DroppedItem implements Trigger {
 
     readonly isPassable = true;
 
-    readonly item: Item;
-
     coordinates: Coordinates;
 
+    /**
+     * Holding item
+     */
+    readonly item: Item;
+
     constructor(item: Item, coordinates: Coordinates) {
-        this.item = item;
         this.coordinates = coordinates;
+        this.item = item;
     }
 
     onStep(world: GameWorld): void {

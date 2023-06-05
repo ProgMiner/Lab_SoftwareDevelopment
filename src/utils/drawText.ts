@@ -1,14 +1,40 @@
 
 
+/**
+ * {@link drawText} options object
+ */
 export interface DrawTextOptions {
 
+    /**
+     * Vertical gap between lines, default is 5
+     */
     lineGap?: number;
+
+    /**
+     * Need to center text horizontally, default `false`
+     */
     centerWidth?: boolean;
+
+    /**
+     * Need to center text vertically, default `false`
+     */
     centerHeight?: boolean;
 }
 
+/**
+ * Font family usable to display emojis
+ */
 export const EMOJI_FONT_FAMILY = 'Roboto, "Noto Colr Emoji Glyf", sans-serif';
 
+/**
+ * Utility function to draw text on canvas
+ *
+ * @param context canvas context to draw on
+ * @param text text to draw
+ * @param x x coordinate of left side of text (or center, see {@link DrawTextOptions})
+ * @param y y coordinate of top side of text (or center, see {@link DrawTextOptions})
+ * @param options some customization options
+ */
 export const drawText = (
     context: CanvasRenderingContext2D,
     text: string,

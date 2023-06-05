@@ -1,7 +1,7 @@
 import { drawTexture, loadTexture } from '../../utils/drawTexture';
 import { Equipment, EquipmentType } from '../items/Equipment';
+import { Coordinates } from '../../utils/Coordinates';
 import { Inventory } from '../Inventory/Inventory';
-import { Coordinates } from '../Coordinates';
 import { GameObject } from '../GameObject';
 
 import person from './person.png';
@@ -13,28 +13,55 @@ const DEFAULT_BASE_ARMOR = 0;
 
 loadTexture(person);
 
+/**
+ * Game player
+ */
 export class Player implements GameObject {
 
     readonly isPassable = true;
 
     coordinates: Coordinates = new Coordinates(0, 0);
 
+    /**
+     * Player's inventory
+     */
     readonly inventory = new Inventory();
 
+    /**
+     * Maximum health
+     */
     maxHealth: number = DEFAULT_MAX_HEALTH;
+
+    /**
+     * Current health
+     */
     health: number = DEFAULT_MAX_HEALTH;
 
+    /**
+     * Player's damage without equipment
+     */
     baseDamage: number = DEFAULT_BASE_DAMAGE;
+
+    /**
+     * Player's armor without equipment
+     */
     baseArmor: number = DEFAULT_BASE_ARMOR;
 
+    /**
+     * Equipped items
+     *
+     * For each {@link EquipmentType} may be equipped only one item in same time
+     *
+     * Uses {@link EquipmentType.MAX_VALUE} as size
+     */
     readonly equipment = new Array<Equipment | undefined>(EquipmentType.MAX_VALUE);
 
     /**
-     * Heal player of factor of max health
+     * Heal player on factor of max health
      *
      * @param factor healing factor
      *
-     * @return true if player was healed or false if player's health is already max
+     * @return `true` if player was healed or `false` if player's health is already max
      */
     healOn(factor: number): boolean {
         if (this.health == this.maxHealth) {
@@ -62,7 +89,7 @@ export class Player implements GameObject {
     }
 
     /**
-     * Calc actual damage
+     * Calculate actual damage
      */
     actualDamage(): number {
         let result = this.baseDamage;
@@ -81,7 +108,7 @@ export class Player implements GameObject {
     }
 
     /**
-     * Calc actual armor
+     * Calculate actual armor
      */
     actualArmor(): number {
         let result = this.baseArmor;
