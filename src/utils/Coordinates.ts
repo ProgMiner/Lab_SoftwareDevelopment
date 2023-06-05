@@ -52,6 +52,15 @@ export class Coordinates {
     }
 
     /**
+     * Calculates atan2
+     *
+     * @see Math.atan2
+     */
+    atan2(): number {
+        return Math.atan2(this.y, this.x);
+    }
+
+    /**
      * Check is equals to other coordinates object
      *
      * @param that object to check with

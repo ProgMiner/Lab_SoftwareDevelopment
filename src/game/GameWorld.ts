@@ -109,7 +109,7 @@ export class GameWorld implements Drawable {
 
         this.player.coordinates = newPosition;
 
-        const triggers = this.checkCollisionWithObjects(newPosition, false);
+        const triggers = this.checkCollisionWithObjects(newPosition, (object) => object.isPassable, false);
         for (const trigger of triggers) {
             if (isTrigger(trigger)) {
                 trigger.onStep(this);
@@ -157,24 +157,142 @@ export class GameWorld implements Drawable {
         }
     }
 
-    checkCollisionWithObjects(point: Coordinates, onlyImpassable: boolean = true) {
+    /**
+     * Check collision of objects with point
+     *
+     * @param point point in world
+     * @param filterFunction filter for checking objects
+     * @param stopOnFirst if `true` returns only first colliding object
+     *
+     * @return array of objects that collides
+     */
+    checkCollisionWithObjects(
+        point: Coordinates,
+        filterFunction: (object: GameObject) => boolean = (object) => !object.isPassable,
+        stopOnFirst: boolean = true,
+    ): GameObject[] {
         let result: GameObject[] = [];
 
         for (const object of this.objects) {
-            if (onlyImpassable) {
-                if (object.isPassable) {
-                    continue;
-                }
+            if (!filterFunction(object)) {
+                continue;
             }
 
             if (object.collides(point)) {
                 result.push(object);
+
+                if (stopOnFirst) {
+                    return result;
+                }
             }
         }
 
         return result;
     }
 
+    /**
+     * Ray trace from point in world in specified direction with
+     * maximum ray distance of length of distance vector
+     *
+     * @param startPoint start point of ray tracing
+     * @param direction direction and length vector
+     * @param filterFunction filter for checking objects
+     * @param stopOnFirst if `true` returns only first colliding object
+     *
+     * @return array of colliding objects
+     */
+    rayTrace(
+        startPoint: Coordinates,
+        direction: Coordinates,
+        filterFunction: (object: GameObject) => boolean = (object) => !object.isPassable,
+        stopOnFirst: boolean = true,
+    ): GameObject[] {
+        const result = [];
+
+        for (const cell of GameWorld.rayTraceCells(startPoint, direction)) {
+            result.push(...this.checkCollisionWithObjects(cell, filterFunction, stopOnFirst));
+
+            if (stopOnFirst && result.length > 0) {
+                return result;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Ray trace from point in world in specified direction with
+     * maximum ray distance of length of distance vector
+     *
+     * @param startPoint start point of ray tracing
+     * @param direction direction and length vector
+     *
+     * @return iterable of cells from start to end
+     */
+    static *rayTraceCells(
+        startPoint: Coordinates,
+        direction: Coordinates,
+    ): IterableIterator<Coordinates> {
+        const maxLength = direction.length();
+        const angle = direction.atan2();
+
+        let cell = new Coordinates(Math.round(startPoint.x), Math.round(startPoint.y));
+
+        let point = startPoint;
+        while (startPoint.vectorTo(point).length() <= maxLength) {
+            yield cell;
+
+            let variants: [[Coordinates, Coordinates], [Coordinates, Coordinates], [Coordinates, Coordinates]];
+
+            if (direction.x >= 0 && direction.y >= 0) {
+                variants = [
+                    [new Coordinates(cell.x + 1, cell.y), new Coordinates(cell.x + 0.5, point.y + direction.y * (cell.x + 0.5 - point.x) / direction.x)],
+                    [new Coordinates(cell.x + 1, cell.y + 1), new Coordinates(cell.x + 0.5, cell.y + 0.5)],
+                    [new Coordinates(cell.x, cell.y + 1), new Coordinates(point.x + direction.x * (cell.y + 0.5 - point.y) / direction.y, cell.y + 0.5)],
+                ];
+            } else if (direction.x >= 0 && direction.y < 0) {
+                variants = [
+                    [new Coordinates(cell.x, cell.y - 1), new Coordinates(point.x + direction.x * (cell.y - 0.5 - point.y) / direction.y, cell.y - 0.5)],
+                    [new Coordinates(cell.x + 1, cell.y - 1), new Coordinates(cell.x + 0.5, cell.y - 0.5)],
+                    [new Coordinates(cell.x + 1, cell.y), new Coordinates(cell.x + 0.5, point.y + direction.y * (cell.x + 0.5 - point.x) / direction.x)],
+                ];
+            } else if (direction.x < 0 && direction.y < 0) {
+                variants = [
+                    [new Coordinates(cell.x - 1, cell.y), new Coordinates(cell.x - 0.5, point.y + direction.y * (cell.x - 0.5 - point.x) / direction.x)],
+                    [new Coordinates(cell.x - 1, cell.y - 1), new Coordinates(cell.x - 0.5, cell.y - 0.5)],
+                    [new Coordinates(cell.x, cell.y - 1), new Coordinates(point.x + direction.x * (cell.y - 0.5 - point.y) / direction.y, cell.y - 0.5)],
+                ];
+            } else {
+                variants = [
+                    [new Coordinates(cell.x, cell.y + 1), new Coordinates(point.x + direction.x * (cell.y + 0.5 - point.y) / direction.y, cell.y + 0.5)],
+                    [new Coordinates(cell.x - 1, cell.y + 1), new Coordinates(cell.x - 0.5, cell.y + 0.5)],
+                    [new Coordinates(cell.x - 1, cell.y), new Coordinates(cell.x - 0.5, point.y + direction.y * (cell.x - 0.5 - point.x) / direction.x)],
+                ];
+            }
+
+            const splittingAngle = point.vectorTo(variants[1][1]).atan2();
+
+            if (angle < splittingAngle) {
+                cell = variants[0][0];
+                point = variants[0][1];
+            } else if (angle === splittingAngle) {
+                cell = variants[1][0];
+                point = variants[1][1];
+            } else {
+                cell = variants[2][0];
+                point = variants[2][1];
+            }
+        }
+    }
+
+    /**
+     * Calculate damage
+     *
+     * @param damage damage points of attacker
+     * @param armor armor points of attacked
+     *
+     * @return result damage
+     */
     static calcDamage(damage: number, armor: number): number {
         return damage - armor;
     }
