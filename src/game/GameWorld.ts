@@ -102,11 +102,19 @@ export class GameWorld implements Drawable {
         return true;
     }
 
-    draw(
-        context: CanvasRenderingContext2D,
-        center: Coordinates,
-        scale: Coordinates,
-    ): void {
+    hitPlayer(damage: number) {
+        const actualDamage = GameWorld.calcDamage(damage, this.player.actualArmor);
+
+        if (actualDamage >= this.player.health) {
+            console.log('Die');
+            // TODO death screen
+            return;
+        }
+
+        this.player.health -= actualDamage;
+    }
+
+    draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void {
         for (const object of this.objects) {
             const coords = new Coordinates(
                 object.coordinates.x - this.player.coordinates.x,
@@ -136,5 +144,9 @@ export class GameWorld implements Drawable {
         }
 
         return result;
+    }
+
+    static calcDamage(damage: number, armor: number): number {
+        return damage - armor;
     }
 }

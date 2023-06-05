@@ -48,6 +48,11 @@ export class Player implements GameObject {
     baseArmor: number = DEFAULT_BASE_ARMOR;
 
     /**
+     * Player's experience points
+     */
+    xp: number = 0;
+
+    /**
      * Equipped items
      *
      * For each {@link EquipmentType} may be equipped only one item in same time
@@ -55,6 +60,44 @@ export class Player implements GameObject {
      * Uses {@link EquipmentType.MAX_VALUE} as size
      */
     readonly equipment = new Array<Equipment | undefined>(EquipmentType.MAX_VALUE);
+
+    /**
+     * Calculate actual damage
+     */
+    get actualDamage(): number {
+        let result = this.baseDamage;
+
+        for (const item of this.equipment) {
+            if (item === undefined) {
+                continue;
+            }
+
+            if (item.equipmentType === EquipmentType.SWORD) {
+                result += item.equipmentBonus;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Calculate actual armor
+     */
+    get actualArmor(): number {
+        let result = this.baseArmor;
+
+        for (const item of this.equipment) {
+            if (item === undefined) {
+                continue;
+            }
+
+            if (item.equipmentType === EquipmentType.ARMOR) {
+                result += item.equipmentBonus;
+            }
+        }
+
+        return result;
+    }
 
     /**
      * Heal player on factor of max health
@@ -89,48 +132,15 @@ export class Player implements GameObject {
     }
 
     /**
-     * Calculate actual damage
+     * Increases player's experience points on specified value
+     *
+     * @param xp experience points
      */
-    actualDamage(): number {
-        let result = this.baseDamage;
-
-        for (const item of this.equipment) {
-            if (item === undefined) {
-                continue;
-            }
-
-            if (item.equipmentType === EquipmentType.SWORD) {
-                result += item.equipmentBonus;
-            }
-        }
-
-        return result;
+    giveXp(xp: number) {
+        this.xp += xp;
     }
 
-    /**
-     * Calculate actual armor
-     */
-    actualArmor(): number {
-        let result = this.baseArmor;
-
-        for (const item of this.equipment) {
-            if (item === undefined) {
-                continue;
-            }
-
-            if (item.equipmentType === EquipmentType.ARMOR) {
-                result += item.equipmentBonus;
-            }
-        }
-
-        return result;
-    }
-
-    draw(
-        context: CanvasRenderingContext2D,
-        center: Coordinates,
-        scale: Coordinates,
-    ): void {
+    draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void {
         drawTexture(person, context, center, scale);
     }
 

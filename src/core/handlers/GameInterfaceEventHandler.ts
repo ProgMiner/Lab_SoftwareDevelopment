@@ -1,6 +1,7 @@
 import { INVENTORY_SIZE, ITEM_SCALE_FACTOR } from '../../game/Inventory/Inventory';
 import { Equipment, EquipmentType } from '../../game/items/Equipment';
 import { drawText, EMOJI_FONT_FAMILY } from '../../utils/drawText';
+import { drawBar, HEALTH_BAR_COLOR } from '../../utils/drawBar';
 import { Coordinates } from '../../utils/Coordinates';
 import { Player } from '../../game/Player/Player';
 import { EventHandler } from '../events/EventBus';
@@ -141,7 +142,13 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
                 new Coordinates(INVENTORY_SCALE, INVENTORY_SCALE),
             )
 
-            drawHealthBar(healthBarValue, canvas, context);
+            drawBar(
+                healthBarValue,
+                context,
+                new Coordinates(canvas.width / 2, canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT / 2),
+                new Coordinates(INVENTORY_SCALE * INVENTORY_SIZE, HEALTH_BAR_HEIGHT),
+                HEALTH_BAR_COLOR,
+            );
 
             drawEquipment(world.player, canvas, context);
 
@@ -152,8 +159,8 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
             drawText(
                 context,
                 `❤ ${world.player.health} / ${world.player.maxHealth}  |  `
-                + `👊 ${world.player.actualDamage()}  |  `
-                + `🛡️ ${world.player.actualArmor()}`,
+                + `👊 ${world.player.actualDamage}  |  `
+                + `🛡️ ${world.player.actualArmor}`,
                 canvas.width / 2,
                 canvas.height - INVENTORY_SCALE - 3 * GAP - HEALTH_BAR_HEIGHT - STATS_HEIGHT,
                 { centerWidth: true },
@@ -215,53 +222,3 @@ const drawEquipment = (player: Player, canvas: HTMLCanvasElement, context: Canva
         context.restore();
     }
 }
-
-const drawHealthBar = (value: number, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
-    context.save();
-
-    context.fillStyle = '#ccc';
-    context.fillRect(
-        canvas.width / 2 - INVENTORY_SCALE * INVENTORY_SIZE / 2,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        INVENTORY_SCALE * INVENTORY_SIZE,
-        HEALTH_BAR_HEIGHT,
-    );
-
-    context.fillStyle = '#e74236';
-    context.fillRect(
-        canvas.width / 2 - INVENTORY_SCALE * INVENTORY_SIZE / 2,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        INVENTORY_SCALE * INVENTORY_SIZE * value,
-        HEALTH_BAR_HEIGHT,
-    );
-
-    const gradient = context.createLinearGradient(
-        0,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        0,
-        canvas.height - INVENTORY_SCALE - 2 * GAP,
-    )
-
-    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
-    context.fillStyle = gradient;
-
-    context.fillRect(
-        canvas.width / 2 - INVENTORY_SCALE * INVENTORY_SIZE / 2,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        INVENTORY_SCALE * INVENTORY_SIZE,
-        HEALTH_BAR_HEIGHT,
-    );
-
-    context.strokeStyle = '#000';
-    context.lineWidth = 3;
-
-    context.strokeRect(
-        canvas.width / 2 - INVENTORY_SCALE * INVENTORY_SIZE / 2,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        INVENTORY_SCALE * INVENTORY_SIZE,
-        HEALTH_BAR_HEIGHT,
-    );
-
-    context.restore();
-};

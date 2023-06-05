@@ -20,11 +20,7 @@ export class Wall implements GameObject {
      */
     matrix: boolean[][] = [];
 
-    draw(
-        context: CanvasRenderingContext2D,
-        center: Coordinates,
-        scale: Coordinates,
-    ): void {
+    draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void {
         for (let i = 0; i < this.matrix.length; ++i) {
             const row = this.matrix[i]!!;
 

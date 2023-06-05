@@ -1,16 +1,26 @@
 import { Coordinates } from './Coordinates';
 
 
-const textures = new Map();
+export const NO_TEXTURE = Symbol('no texture');
+
+export type Texture = string | typeof NO_TEXTURE;
+
+const textures = new Map<Texture, HTMLImageElement>();
 
 /**
  * Load texture to use in {@link drawTexture}
  *
  * @param texture imported texture
  */
-export const loadTexture = (texture: string) => {
-    if (process.env.NODE_ENV == 'test')
+export const loadTexture = (texture: Texture) => {
+    if (process.env.NODE_ENV == 'test') {
         return;
+    }
+
+    if (typeof texture !== 'string') {
+        return;
+    }
+
     const img = new Image();
     img.src = texture;
 
@@ -30,15 +40,22 @@ export const loadTexture = (texture: string) => {
  * @see loadTexture
  */
 export const drawTexture = (
-    texture: string,
+    texture: Texture,
     context: CanvasRenderingContext2D,
     place: Coordinates,
     scale: Coordinates,
 ) => {
-    if (!textures.has(texture)) {
+    if (texture === NO_TEXTURE) {
+        return;
+    }
+
+    const image = textures.get(texture);
+
+    // noinspection JSIncompatibleTypesComparison
+    if (image === undefined) {
         console.error('Texture not loaded', texture);
         return;
     }
 
-    context.drawImage(textures.get(texture), place.x - scale.x / 2, place.y - scale.y / 2, scale.x, scale.y);
+    context.drawImage(image, place.x - scale.x / 2, place.y - scale.y / 2, scale.x, scale.y);
 }
