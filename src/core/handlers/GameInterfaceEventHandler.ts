@@ -23,6 +23,7 @@ const HEALTH_BAR_ANIMATION_SPEED = 0.01; // 1/ms
  * - digits/left arrow/right arrow - change selected inventory slot
  * - Enter - use selected item
  * - Backspace - drop selected item in world (on current cell)
+ * - Escape - exit game and return to main menu
  */
 export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
     let healthBarValue = 0;
@@ -59,6 +60,25 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
         const { canvas, context, world, previousUpdateTime } = state;
 
         if (event.type === 'keyDown') {
+            if (event.event.code === 'Enter') {
+                world.player.inventory.useSelectedItem(world);
+                return;
+            }
+
+            if (event.event.code === 'Backspace') {
+                world.player.inventory.dropSelectedItem(world);
+                return;
+            }
+
+            if (event.event.code === 'Escape') {
+                return {
+                    state: 'mainMenu',
+                    canvas,
+                    context,
+                    previousUpdateTime,
+                };
+            }
+
             const oldSelectedItem = world.player.inventory.selectedItem;
             let newSelectedItem = oldSelectedItem;
 
@@ -109,14 +129,7 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
             }
 
             world.player.inventory.selectedItem = newSelectedItem;
-
-            if (event.event.code === 'Enter') {
-                world.player.inventory.useSelectedItem(world);
-            }
-
-            if (event.event.code === 'Backspace') {
-                world.player.inventory.dropSelectedItem(world);
-            }
+            return;
         }
 
         if (event.type === 'tick') {

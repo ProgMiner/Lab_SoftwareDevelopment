@@ -11,23 +11,55 @@ import { constGenerator } from '../../game/generators/Generator';
 import { UniformItemGenerator } from '../../game/generators/UniformItemGenerator';
 import { seededRandom } from '../../utils/seededRandom';
 import { FileWorldGenerator } from '../../game/generators/FileWorldGenerator';
-import { GameState } from '../../states/GameState';
 import { DEFAULT_FONT_FAMILY, drawText } from '../../utils/drawText';
+import { GameState } from '../../states/GameState';
 
 import world from '../../worlds/test.world';
 
 
+const MAIN_MENU_TEXT = `\
+Press button to start:
+
+1. Load stub world
+2. Load random world
+3. Load world from file\
+`;
+
 /**
  * Event handler that controls interaction with main menu
  *
- * Reacts on {@link ClickEvent}
+ * TODO implement GUI
+ *
+ * Reacts on {@link KeyDownEvent}:
+ * - 1 - load stub world
+ * - 2 - load random world
+ * - 3 - load world from file {@link world}
  */
 export const MainMenuEventHandler: EventHandler<State> = (state, event): GameState | void => {
     if (state.state !== 'mainMenu') {
         return;
     }
 
-    if (event.type === 'click') {
+    if (event.type === 'keyDown') {
+        let loadCase: 1 | 2 | 3;
+
+        switch (event.event.code) {
+            case 'Digit1':
+                loadCase = 1;
+                break;
+
+            case 'Digit2':
+                loadCase = 2;
+                break;
+
+            case 'Digit3':
+                loadCase = 3;
+                break;
+
+            default:
+                return;
+        }
+
         const newState: GameState = {
             ...state,
             state: 'game',
@@ -37,13 +69,19 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event): GameSta
             cameraOffset: new Coordinates(0, 0),
         };
 
-        newState.world = makeGame1();
+        // TODO load screen
 
-        // makeGame3().then(world => {
-        //     state.world = world;
-
-        //     eventBus({ type: 'tick' });
-        // });
+        if (loadCase === 1) {
+            newState.world = makeGame1();
+        } else if (loadCase === 2) {
+            makeGame2().then(world => {
+                newState.world = world;
+            });
+        } else {
+            makeGame3().then(world => {
+                newState.world = world;
+            });
+        }
 
         return newState;
     }
@@ -56,13 +94,10 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event): GameSta
         context.font = `20px ${DEFAULT_FONT_FAMILY}`;
         context.fillStyle = '#eee';
 
-        drawText(
-            context,
-            "Click anywhere to start",
-            canvas.width / 2,
-            canvas.height / 2,
-            { centerWidth: true, centerHeight: true },
-        );
+        drawText(context, MAIN_MENU_TEXT, canvas.width / 2, canvas.height / 2, {
+            centerWidth: true,
+            centerHeight: true,
+        });
 
         context.restore();
     }

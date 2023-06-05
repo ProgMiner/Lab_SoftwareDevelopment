@@ -59,15 +59,11 @@ export const drawText = (
 ) => {
     const lines = text.split('\n');
 
+    const lineHeight = Math.max(...lines.map(l => context.measureText(l)).map(tm =>
+        tm.actualBoundingBoxAscent + tm.actualBoundingBoxDescent));
+
     if (centerHeight) {
-        let height = -lineGap;
-
-        for (const line of lines) {
-            const textMetrics = context.measureText(line);
-
-            height += textMetrics.actualBoundingBoxAscent
-                + textMetrics.actualBoundingBoxDescent + lineGap;
-        }
+        const height = (lineHeight + lineGap) * lines.length - lineGap;
 
         y -= height / 2;
     }
@@ -75,7 +71,7 @@ export const drawText = (
     for (const line of lines) {
         const textMetrics = context.measureText(line);
 
-        y += textMetrics.actualBoundingBoxAscent;
+        y += lineHeight - textMetrics.actualBoundingBoxDescent;
 
         if (centerWidth) {
             context.fillText(line, x - textMetrics.width / 2, y);
@@ -93,7 +89,6 @@ export const drawText = (
  * @param context canvas context to measure on
  * @param text text to measure
  * @param options some customization options for {@drawText}
-
  *
  * @return size of text
  */
@@ -104,9 +99,11 @@ export const measureText = (
 ): Coordinates => {
     const linesTextMetrics = text.split('\n').map(l => context.measureText(l));
 
-    return new Coordinates(
-        Math.max(...linesTextMetrics.map(tm => tm.width)),
-        linesTextMetrics.map(tm => tm.actualBoundingBoxAscent + tm.actualBoundingBoxDescent + lineGap)
-            .reduce((a, b) => a + b, -lineGap),
-    );
+    const lineHeight = Math.max(...linesTextMetrics.map(tm =>
+        tm.actualBoundingBoxAscent + tm.actualBoundingBoxDescent));
+
+    const width = Math.max(...linesTextMetrics.map(tm => tm.width));
+    const height = (lineHeight + lineGap) * linesTextMetrics.length - lineGap;
+
+    return new Coordinates(width, height);
 };
