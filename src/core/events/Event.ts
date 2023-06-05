@@ -1,7 +1,8 @@
-import { LoadEvent } from './LoadEvent';
-import { ResizeEvent } from './ResizeEvent';
+import { GameEvent } from '../../game/events/GameEvent';
 import { KeyDownEvent } from './KeyDownEvent';
+import { ResizeEvent } from './ResizeEvent';
 import { ClickEvent } from './ClickEvent';
+import { LoadEvent } from './LoadEvent';
 import { TickEvent } from './TickEvent';
 
 
@@ -19,4 +20,4 @@ export interface BaseEvent<Type extends string> {
 /**
  * General type for all events
  */
-export type Event = LoadEvent | ResizeEvent | KeyDownEvent | ClickEvent | TickEvent;
+export type Event = LoadEvent | ResizeEvent | KeyDownEvent | ClickEvent | TickEvent | GameEvent;

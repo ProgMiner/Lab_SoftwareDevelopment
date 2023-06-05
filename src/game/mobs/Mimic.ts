@@ -16,25 +16,29 @@ export class Mimic extends AbstractMob<Mimic> {
     health: number = 5;
     readonly maxHealth: number = 5;
 
-    armor: number = 1;
     damage: number = 1;
+    armor: number = 0;
 
     experience: number = 1;
+
+    item: Item;
+
+    private readonly droppedItem: DroppedItem;
 
     get self() {
         return this;
     }
 
-    item: Item;
-
     constructor(item: Item, coordinates: Coordinates) {
         super(coordinates, NO_TEXTURE, new PassiveBehaviourModel());
 
         this.item = item;
+        this.droppedItem = new DroppedItem(this.item, this.coordinates);
     }
 
     draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates) {
-        new DroppedItem(this.item, this.coordinates).draw(context, center, scale);
+        this.droppedItem.coordinates = this.coordinates;
+        this.droppedItem.draw(context, center, scale);
 
         // draw health bar on top
         super.draw(context, center, scale);

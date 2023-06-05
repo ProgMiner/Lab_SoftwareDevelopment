@@ -1,4 +1,5 @@
 import { Coordinates } from '../utils/Coordinates';
+import { EventBus } from '../core/events/EventBus';
 import { GameObject } from './GameObject';
 import { Player } from './Player/Player';
 import { isTrigger } from './Trigger';
@@ -30,8 +31,18 @@ export class GameWorld implements Drawable {
      */
     player: Player = new Player();
 
-    constructor() {
+    private readonly _eventBus: EventBus;
+
+    get eventBus(): EventBus {
+        return this._eventBus;
+    }
+
+    /**
+     * @param eventBus current event bus
+     */
+    constructor(eventBus: EventBus) {
         this.objects.push(this.player);
+        this._eventBus = eventBus;
     }
 
     /**
@@ -106,8 +117,9 @@ export class GameWorld implements Drawable {
         const actualDamage = GameWorld.calcDamage(damage, this.player.actualArmor);
 
         if (actualDamage >= this.player.health) {
-            console.log('Die');
-            // TODO death screen
+            this.player.health = 0;
+
+            this.eventBus({ type: 'playerDie' });
             return;
         }
 

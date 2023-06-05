@@ -1,5 +1,6 @@
 import { GoldenApple } from '../items/GoldenApple/GoldenApple';
 import { Coordinates } from '../../utils/Coordinates';
+import { EventBus } from '../../core/events/EventBus';
 import { WorldGenerator } from './Generator';
 import { DroppedItem } from '../DroppedItem';
 import { Sword } from '../items/Sword/Sword';
@@ -31,6 +32,8 @@ export class FileWorldGenerator implements WorldGenerator {
 
     private static readonly WHITESPACE = /\s+/;
 
+    private readonly eventBus: EventBus;
+
     private readonly objects: GameObject[] = [];
 
     private wall!: Wall;
@@ -38,13 +41,16 @@ export class FileWorldGenerator implements WorldGenerator {
 
     /**
      * @param content content of file to parse
+     * @param eventBus current event bus
      */
-    constructor(content: string) {
+    constructor(content: string, eventBus: EventBus) {
+        this.eventBus = eventBus;
+
         this.parseFile(content);
     }
 
     async generate(): Promise<GameWorld> {
-        const result = new GameWorld();
+        const result = new GameWorld(this.eventBus);
 
         result.player.coordinates = this.playerPosition;
         this.objects.forEach(o => result.placeObject(o));
@@ -175,10 +181,11 @@ export class FileWorldGenerator implements WorldGenerator {
      * Loads file using fetch
      *
      * @param file imported world
+     * @param eventBus current event bus
      */
-    public static async loadFile(file: string): Promise<FileWorldGenerator> {
+    public static async loadFile(file: string, eventBus: EventBus): Promise<FileWorldGenerator> {
         const response = await fetch(file);
 
-        return new FileWorldGenerator(await response.text());
+        return new FileWorldGenerator(await response.text(), eventBus);
     }
 }

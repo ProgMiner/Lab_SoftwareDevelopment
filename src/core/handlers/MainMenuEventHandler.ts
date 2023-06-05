@@ -1,4 +1,4 @@
-import { EventHandler } from '../events/EventBus';
+import { EventBus, EventHandler } from '../events/EventBus';
 import { State } from '../../states/State';
 import { GameWorld } from '../../game/GameWorld';
 import { Coordinates } from '../../utils/Coordinates';
@@ -12,7 +12,8 @@ import { UniformItemGenerator } from '../../game/generators/UniformItemGenerator
 import { seededRandom } from '../../utils/seededRandom';
 import { FileWorldGenerator } from '../../game/generators/FileWorldGenerator';
 import { DEFAULT_FONT_FAMILY, drawText } from '../../utils/drawText';
-import { GameState } from '../../states/GameState';
+import { CommonGameState } from '../../states/CommonGameState';
+import { GameStateState } from '../../states/GameState';
 import { Mimic } from '../../game/mobs/Mimic';
 
 import world from '../../worlds/test.world';
@@ -36,7 +37,7 @@ Press button to start:
  * - 2 - load random world
  * - 3 - load world from file {@link world}
  */
-export const MainMenuEventHandler: EventHandler<State> = (state, event): GameState | void => {
+export const MainMenuEventHandler: EventHandler<State> = (state, event, eventBus): CommonGameState | void => {
     if (state.state !== 'mainMenu') {
         return;
     }
@@ -61,10 +62,10 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event): GameSta
                 return;
         }
 
-        const newState: GameState = {
+        const newState: CommonGameState = {
             ...state,
-            state: 'game',
-            world: new GameWorld(),
+            state: GameStateState.COMMON,
+            world: new GameWorld(eventBus),
             darknessRadius: 130,
             scale: new Coordinates(100, 100),
             cameraOffset: new Coordinates(0, 0),
@@ -73,13 +74,13 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event): GameSta
         // TODO load screen
 
         if (loadCase === 1) {
-            newState.world = makeGame1();
+            newState.world = makeGame1(eventBus);
         } else if (loadCase === 2) {
-            makeGame2().then(world => {
+            makeGame2(eventBus).then(world => {
                 newState.world = world;
             });
         } else {
-            makeGame3().then(world => {
+            makeGame3(eventBus).then(world => {
                 newState.world = world;
             });
         }
@@ -104,8 +105,8 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event): GameSta
     }
 };
 
-const makeGame1 = (): GameWorld => {
-    const result = new GameWorld();
+const makeGame1 = (eventBus: EventBus): GameWorld => {
+    const result = new GameWorld(eventBus);
 
     const wall = new Wall();
     wall.coordinates = new Coordinates(-4, -3);
@@ -131,13 +132,13 @@ const makeGame1 = (): GameWorld => {
     return result;
 }
 
-const makeGame2 = async () => {
-    return new BoxedWorldGenerator(5, 2, new Coordinates(6, 5), new UniformItemGenerator([
+const makeGame2 = async (eventBus: EventBus) => {
+    return new BoxedWorldGenerator(eventBus, 5, 2, new Coordinates(6, 5), new UniformItemGenerator([
         [constGenerator(() => new Sword()), 1],
         [constGenerator(() => new GoldenApple()), 1],
     ])).generate(seededRandom('' + performance.now()));
 }
 
-const makeGame3 = async () => {
-    return (await FileWorldGenerator.loadFile(world)).generate();
+const makeGame3 = async (eventBus: EventBus) => {
+    return (await FileWorldGenerator.loadFile(world, eventBus)).generate();
 };

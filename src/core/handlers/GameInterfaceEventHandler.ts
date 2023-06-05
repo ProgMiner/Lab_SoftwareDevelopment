@@ -1,6 +1,7 @@
 import { INVENTORY_SIZE, ITEM_SCALE_FACTOR } from '../../game/Inventory/Inventory';
+import { drawText, EMOJI_FONT_FAMILY, formatNumber } from '../../utils/drawText';
 import { Equipment, EquipmentType } from '../../game/items/Equipment';
-import { drawText, EMOJI_FONT_FAMILY } from '../../utils/drawText';
+import { GameStateState, isGameState } from '../../states/GameState';
 import { drawBar, HEALTH_BAR_COLOR } from '../../utils/drawBar';
 import { Coordinates } from '../../utils/Coordinates';
 import { Player } from '../../game/Player/Player';
@@ -54,13 +55,26 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
     };
 
     return (state, event) => {
-        if (state.state !== 'game') {
+        if (!isGameState(state)) {
             return;
         }
 
         const { canvas, context, world, previousUpdateTime } = state;
 
         if (event.type === 'keyDown') {
+            if (event.event.code === 'Escape') {
+                return {
+                    state: 'mainMenu',
+                    canvas,
+                    context,
+                    previousUpdateTime,
+                };
+            }
+
+            if (state.state !== GameStateState.COMMON) {
+                return;
+            }
+
             if (event.event.code === 'Enter') {
                 world.player.inventory.useSelectedItem(world);
                 return;
@@ -69,15 +83,6 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
             if (event.event.code === 'Backspace') {
                 world.player.inventory.dropSelectedItem(world);
                 return;
-            }
-
-            if (event.event.code === 'Escape') {
-                return {
-                    state: 'mainMenu',
-                    canvas,
-                    context,
-                    previousUpdateTime,
-                };
             }
 
             const oldSelectedItem = world.player.inventory.selectedItem;
@@ -158,9 +163,9 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
             context.font = STATS_FONT;
             drawText(
                 context,
-                `❤ ${world.player.health} / ${world.player.maxHealth}  |  `
-                + `👊 ${world.player.actualDamage}  |  `
-                + `🛡️ ${world.player.actualArmor}`,
+                `❤ ${formatNumber(world.player.health)} / ${formatNumber(world.player.maxHealth)}  |  `
+                + `👊 ${formatNumber(world.player.actualDamage)}  |  `
+                + `🛡️ ${formatNumber(world.player.actualArmor)}`,
                 canvas.width / 2,
                 canvas.height - INVENTORY_SCALE - 3 * GAP - HEALTH_BAR_HEIGHT - STATS_HEIGHT,
                 { centerWidth: true },
@@ -212,7 +217,7 @@ const drawEquipment = (player: Player, canvas: HTMLCanvasElement, context: Canva
 
         drawText(
             context,
-            (item.equipmentBonus < 0 ? '' : '+') + item.equipmentBonus
+            formatNumber(item.equipmentBonus, true)
             + ' ' + equipmentTypeIcon(item.equipmentType),
             x + itemScale / 2 + GAP,
             y,
