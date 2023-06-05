@@ -1,23 +1,14 @@
 import { Coordinates, MutableCoordinates } from '../utils/Coordinates';
-import { GameWorld } from './GameWorld';
+import { GameWorld } from '../game/GameWorld';
+import { BaseState } from './State';
 
 
 /**
- * Main game state
+ * Type of event bus state when in game
  *
  * Contains all information, needed to more than one event handler
  */
-export interface State {
-
-    /**
-     * Current canvas HTML tag
-     */
-    readonly canvas: HTMLCanvasElement;
-
-    /**
-     * Current canvas rendering context
-     */
-    readonly context: CanvasRenderingContext2D;
+export interface GameState extends BaseState<'game'> {
 
     /**
      * Current game world
@@ -38,11 +29,4 @@ export interface State {
      * Current offset of camera, used for camera animation
      */
     readonly cameraOffset: MutableCoordinates;
-
-    /**
-     * Previous update time in ms, usable for animations
-     *
-     * @see performance.now
-     */
-    previousUpdateTime: number;
 }

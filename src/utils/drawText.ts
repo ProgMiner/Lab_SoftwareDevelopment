@@ -22,6 +22,11 @@ export interface DrawTextOptions {
 }
 
 /**
+ * Font family usable to display in-game text
+ */
+export const DEFAULT_FONT_FAMILY = 'Roboto, sans-serif';
+
+/**
  * Font family usable to display emojis
  */
 export const EMOJI_FONT_FAMILY = 'Roboto, "Noto Colr Emoji Glyf", sans-serif';

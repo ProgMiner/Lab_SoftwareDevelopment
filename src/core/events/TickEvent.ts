@@ -1,3 +1,4 @@
+import { BaseEvent } from './Event';
 
 
 /**
@@ -5,6 +6,4 @@
  *
  * Fires once on a global timer tick with same frequency
  */
-export interface TickEvent {
-    type: 'tick';
-}
+export type TickEvent = BaseEvent<'tick'>;

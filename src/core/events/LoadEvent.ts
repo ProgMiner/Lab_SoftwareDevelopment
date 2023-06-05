@@ -2,6 +2,6 @@ import { DomEvent } from './DomEvent';
 
 
 /**
- * Window load DOM event
+ * Fires on window load
  */
 export type LoadEvent = DomEvent<'load', Event>;

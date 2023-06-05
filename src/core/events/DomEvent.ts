@@ -1,3 +1,4 @@
+import { BaseEvent } from './Event';
 
 
 /**
@@ -6,8 +7,7 @@
  * @template Type event type
  * @template EventType concrete type of DOM event
  */
-export interface DomEvent<Type extends string, EventType extends Event> {
-    type: Type;
+export interface DomEvent<Type extends string, EventType extends Event> extends BaseEvent<Type> {
 
     /**
      * Wrapped DOM event

@@ -4,7 +4,7 @@ import { drawText, EMOJI_FONT_FAMILY } from '../../utils/drawText';
 import { Coordinates } from '../../utils/Coordinates';
 import { Player } from '../../game/Player/Player';
 import { EventHandler } from '../events/EventBus';
-import { State } from '../../game/State';
+import { State } from '../../states/State';
 
 
 const INVENTORY_SCALE = 64; // px
@@ -51,7 +51,13 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
         }
     };
 
-    return ({ canvas, context, world, previousUpdateTime }, event) => {
+    return (state, event) => {
+        if (state.state !== 'game') {
+            return;
+        }
+
+        const { canvas, context, world, previousUpdateTime } = state;
+
         if (event.type === 'keyDown') {
             const oldSelectedItem = world.player.inventory.selectedItem;
             let newSelectedItem = oldSelectedItem;

@@ -1,6 +1,6 @@
 import { EventHandler } from '../events/EventBus';
 import { drawText } from '../../utils/drawText';
-import { State } from '../../game/State';
+import { State } from '../../states/State';
 
 
 /**
@@ -12,6 +12,10 @@ export const DebugInfoEventHandler: () => EventHandler<State> = () => {
     let lastPressedKey: string | undefined = undefined;
 
     return (state, event) => {
+        if (state.state !== 'game') {
+            return;
+        }
+
         if (event.type === 'keyDown') {
             lastPressedKey = event.event.code;
 

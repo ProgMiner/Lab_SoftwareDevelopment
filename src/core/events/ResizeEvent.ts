@@ -2,6 +2,6 @@ import { DomEvent } from './DomEvent';
 
 
 /**
- * Window resize DOM event
+ * Fires when window resized
  */
 export type ResizeEvent = DomEvent<'resize', UIEvent>;

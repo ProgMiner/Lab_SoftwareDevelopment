@@ -1,11 +1,11 @@
-import { EventHandler } from '../events/EventBus';
-import { State } from '../../game/State';
+import { BaseState } from '../../states/State';
+import { Event } from '../events/Event';
 
 
 /**
  * Event handler that updates canvas size on window load and window resize
  */
-export const InitEventHandler: EventHandler<State> = ({ canvas }, event) => {
+export const InitEventHandler = ({ canvas }: BaseState<string>, event: Event): void => {
     if (event.type !== 'load' && event.type != 'resize') {
         return;
     }

@@ -1,7 +1,8 @@
-import { EventHandler } from '../../events/EventBus';
-import { State } from '../../../game/State';
-import { Coordinates } from '../../../utils/Coordinates';
 import { drawTexture, loadTexture } from '../../../utils/drawTexture';
+import { Coordinates } from '../../../utils/Coordinates';
+import { GameState } from '../../../states/GameState';
+import { EventHandler } from '../../events/EventBus';
+import { State } from '../../../states/State';
 
 import floorTexture from './floor.png';
 
@@ -19,6 +20,10 @@ loadTexture(floorTexture);
  * - W/A/S/D - move player up/left/down/right
  */
 export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
+    if (state.state !== 'game') {
+        return;
+    }
+
     if (event.type === 'keyDown') {
         switch (event.event.code) {
             case 'KeyW':
@@ -72,7 +77,7 @@ export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
     }
 };
 
-const animateCamera = ({ cameraOffset, previousUpdateTime }: State) => {
+const animateCamera = ({ cameraOffset, previousUpdateTime }: GameState) => {
     const calcSpeed = cameraOffset.length() / CAMERA_SPEED_FACTOR;
 
     if (!isFinite(calcSpeed) || calcSpeed < CAMERA_THRESHOLD) {
@@ -124,7 +129,7 @@ const drawFloor = (
     }
 };
 
-const drawDarkness = ({ canvas, context, darknessRadius }: State) => {
+const drawDarkness = ({ canvas, context, darknessRadius }: GameState) => {
     const gradient = context.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,

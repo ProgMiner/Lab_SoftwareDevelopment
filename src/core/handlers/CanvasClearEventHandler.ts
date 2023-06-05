@@ -1,5 +1,5 @@
 import { EventHandler } from '../events/EventBus';
-import { State } from '../../game/State';
+import { State } from '../../states/State';
 
 
 /**
