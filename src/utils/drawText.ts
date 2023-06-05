@@ -1,3 +1,4 @@
+import { Coordinates } from './Coordinates';
 
 
 /**
@@ -32,12 +33,17 @@ export const DEFAULT_FONT_FAMILY = 'Roboto, sans-serif';
 export const EMOJI_FONT_FAMILY = 'Roboto, "Noto Colr Emoji Glyf", sans-serif';
 
 /**
+ * Default line gap in pixels
+ */
+export const DEFAULT_LINE_GAP = 5; // px
+
+/**
  * Utility function to draw text on canvas
  *
  * @param context canvas context to draw on
  * @param text text to draw
- * @param x x coordinate of left side of text (or center, see {@link DrawTextOptions})
- * @param y y coordinate of top side of text (or center, see {@link DrawTextOptions})
+ * @param x x coordinate of left side of text (or center, see {@link DrawTextOptions.centerWidth})
+ * @param y y coordinate of top side of text (or center, see {@link DrawTextOptions.centerHeight})
  * @param options some customization options
  */
 export const drawText = (
@@ -46,7 +52,7 @@ export const drawText = (
     x: number,
     y: number,
     {
-        lineGap = 5,
+        lineGap = DEFAULT_LINE_GAP,
         centerWidth = false,
         centerHeight = false,
     }: DrawTextOptions = {},
@@ -54,7 +60,7 @@ export const drawText = (
     const lines = text.split('\n');
 
     if (centerHeight) {
-        let height = 0;
+        let height = -lineGap;
 
         for (const line of lines) {
             const textMetrics = context.measureText(line);
@@ -79,4 +85,28 @@ export const drawText = (
 
         y += textMetrics.actualBoundingBoxDescent + lineGap;
     }
-}
+};
+
+/**
+ * Utility function to measure size of text that will be drawn by {@link drawText}
+ *
+ * @param context canvas context to measure on
+ * @param text text to measure
+ * @param options some customization options for {@drawText}
+
+ *
+ * @return size of text
+ */
+export const measureText = (
+    context: CanvasRenderingContext2D,
+    text: string,
+    { lineGap = DEFAULT_LINE_GAP }: DrawTextOptions = {},
+): Coordinates => {
+    const linesTextMetrics = text.split('\n').map(l => context.measureText(l));
+
+    return new Coordinates(
+        Math.max(...linesTextMetrics.map(tm => tm.width)),
+        linesTextMetrics.map(tm => tm.actualBoundingBoxAscent + tm.actualBoundingBoxDescent + lineGap)
+            .reduce((a, b) => a + b, -lineGap),
+    );
+};
