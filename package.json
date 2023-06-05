@@ -2,8 +2,14 @@
     "name": "roguelike",
     "version": "1.0.0",
     "private": true,
+    "repository": {
+        "url": "git+https://github.com/ProgMiner/Lab_SoftwareDevelopment.git"
+    },
     "scripts": {
-        "start": "webpack serve --mode=development -d eval-source-map"
+        "start": "webpack serve --mode=development -d eval-source-map",
+        "build": "webpack",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d public"
     },
     "license": "MIT",
     "dependencies": {
@@ -12,6 +18,7 @@
     "devDependencies": {
         "@types/seedrandom": "^3.0.5",
         "css-loader": "^6.8.1",
+        "gh-pages": "^5.0.0",
         "style-loader": "^3.3.3",
         "ts-loader": "^9.4.3",
         "typescript": "^5.0.4",
