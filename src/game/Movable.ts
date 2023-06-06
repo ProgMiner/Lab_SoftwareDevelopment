@@ -23,7 +23,7 @@ export interface Movable extends GameObject {
      *
      * @return `true` if object is on `newPosition` after call
      */
-    moveOn(newPosition: Coordinates, world: GameWorld): boolean;
+    moveTo(newPosition: Coordinates, world: GameWorld): boolean;
 }
 
 export const isMovable = (object: GameObject): object is Movable => {

@@ -114,7 +114,8 @@ export class GameWorld implements Drawable {
 
         this.player.coordinates = newPosition;
 
-        for (const object of this.objects) {
+        // need to copy because of concurrent modification
+        for (const object of [...this.objects]) {
             if (!object.needUpdate(newPosition, this.updateDistance)) {
                 continue;
             }
