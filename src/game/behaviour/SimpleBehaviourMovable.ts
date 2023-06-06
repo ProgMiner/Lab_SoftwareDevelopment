@@ -9,31 +9,27 @@ import { Texture } from '../../utils/drawTexture';
  *
  * @template Self this type
  */
-export abstract class SimpleBehaviourMovable<Self extends SimpleBehaviourMovable<Self>> extends BehaviourMovable<Self> {
+export abstract class SimpleBehaviourMovable extends BehaviourMovable {
 
     /**
      * Current behaviour model
      */
-    actualBehaviourModel: BehaviourModel<Self>;
+    abstract actualBehaviourModel: BehaviourModel<this>;
 
     /**
      * @param coordinates initial coordinates
      * @param texture object texture
-     * @param actualBehaviourModel initial behaviour model
      * @param isPassable is object passable, default `true`
      */
     protected constructor(
         coordinates: Coordinates,
         texture: Texture,
-        actualBehaviourModel: BehaviourModel<Self>,
         isPassable: boolean = true,
     ) {
         super(coordinates, texture, isPassable);
-
-        this.actualBehaviourModel = actualBehaviourModel;
     }
 
-    protected behaviourModel(): BehaviourModel<Self> {
+    protected behaviourModel(): BehaviourModel<this> {
         return this.actualBehaviourModel;
     }
 }

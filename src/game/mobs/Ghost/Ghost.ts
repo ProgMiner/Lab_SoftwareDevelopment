@@ -17,7 +17,9 @@ loadTexture(ghost);
  *
  * Don't like to be in wall
  */
-export class Ghost extends AbstractMob<Ghost> {
+export class Ghost extends AbstractMob {
+
+    actualBehaviourModel = new CowardlyBehaviourModel(new AvoidWallsBehaviourModel());
 
     health: number = 3;
     readonly maxHealth: number = 3;
@@ -27,12 +29,10 @@ export class Ghost extends AbstractMob<Ghost> {
 
     readonly experience: number = 10;
 
-    protected readonly self: Ghost = this;
-
     private inWall: boolean = false;
 
     constructor(coordinates: Coordinates) {
-        super(coordinates, ghost, new CowardlyBehaviourModel(new AvoidWallsBehaviourModel()));
+        super(coordinates, ghost);
     }
 
     draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates) {

@@ -13,7 +13,9 @@ loadTexture(robot);
  *
  * Aggressive mob with huge stats that follows player
  */
-export class Robot extends AbstractMob<Robot> {
+export class Robot extends AbstractMob {
+
+    actualBehaviourModel = new AggressiveBehaviourModel();
 
     health: number = 10;
     readonly maxHealth: number = 10;
@@ -23,9 +25,7 @@ export class Robot extends AbstractMob<Robot> {
 
     readonly experience: number = 10;
 
-    protected readonly self: Robot = this;
-
     constructor(coordinates: Coordinates) {
-        super(coordinates, robot, new AggressiveBehaviourModel());
+        super(coordinates, robot);
     }
 }

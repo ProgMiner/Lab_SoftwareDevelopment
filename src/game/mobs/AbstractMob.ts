@@ -17,9 +17,7 @@ const HEALTH_BAR_HEIGHT_FACTOR = 0.1; // px
  *
  * Mobs are behaviour movables that fights with player on step on
  */
-export abstract class AbstractMob<Self extends AbstractMob<Self>>
-    extends SimpleBehaviourMovable<Self> implements Mob
-{
+export abstract class AbstractMob extends SimpleBehaviourMovable implements Mob {
 
     abstract health: number;
     readonly abstract maxHealth: number;
@@ -49,7 +47,7 @@ export abstract class AbstractMob<Self extends AbstractMob<Self>>
         const damage = GameWorld.calcDamage(player.actualDamage, this.armor);
 
         this.hit(damage, world);
-        TemporalBehaviourModel.decorate(this.self, damage, new ConfusedBehaviourModel());
+        TemporalBehaviourModel.decorate(this, damage, new ConfusedBehaviourModel());
 
         world.hitPlayer(this.damage);
     }

@@ -11,7 +11,9 @@ import { Item } from '../items/Item';
  *
  * Simple mob that stays on one cell and looks like some item
  */
-export class Mimic extends AbstractMob<Mimic> {
+export class Mimic extends AbstractMob {
+
+    actualBehaviourModel = new PassiveBehaviourModel();
 
     health: number = 5;
     readonly maxHealth: number = 5;
@@ -24,8 +26,6 @@ export class Mimic extends AbstractMob<Mimic> {
     private _item: Item;
 
     private droppedItem: DroppedItem;
-
-    protected readonly self: Mimic = this;
 
     /**
      * Item used as Mimic's look
@@ -40,7 +40,7 @@ export class Mimic extends AbstractMob<Mimic> {
     }
 
     constructor(item: Item, coordinates: Coordinates) {
-        super(coordinates, NO_TEXTURE, new PassiveBehaviourModel());
+        super(coordinates, NO_TEXTURE);
 
         this._item = item;
         this.droppedItem = new DroppedItem(item, this.coordinates);
