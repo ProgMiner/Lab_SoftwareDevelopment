@@ -168,7 +168,8 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
                 `❤ ${formatNumber(player.health)} / ${formatNumber(player.maxHealth)}  |  `
                 + `👊 ${formatNumber(player.actualDamage)}  |  `
                 + `🛡️ ${formatNumber(player.actualArmor)}  |  `
-                + `✨ ${formatNumber(player.xp)}`,
+                + `✨ ${formatNumber(player.xp)} / ${formatNumber(player.nextLevelCost)}  |  `
+                + `⬆️ ${formatNumber(player.level)}`,
                 canvas.width / 2,
                 canvas.height - INVENTORY_SCALE - 3 * GAP - HEALTH_BAR_HEIGHT - STATS_HEIGHT,
                 { centerWidth: true },

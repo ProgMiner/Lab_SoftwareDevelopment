@@ -163,6 +163,11 @@ export class GameWorld implements Drawable {
         return true;
     }
 
+    /**
+     * Hits player with specified damage
+     *
+     * @param damage damage of attacker
+     */
     hitPlayer(damage: number) {
         const actualDamage = GameWorld.calcDamage(damage, this.player.actualArmor);
 
@@ -174,6 +179,33 @@ export class GameWorld implements Drawable {
         }
 
         this.player.health -= actualDamage;
+    }
+
+    /**
+     * Increases player's experience points on specified value
+     *
+     * @param xp experience points
+     */
+    givePlayerXp(xp: number) {
+        this.player.xp += xp;
+
+        const nextLevelCost = this.player.nextLevelCost;
+        if (this.player.xp >= nextLevelCost) {
+            this.player.xp -= nextLevelCost;
+
+            const oldStats = {
+                damage: this.player.actualDamage,
+                armor: this.player.actualArmor,
+            }
+
+            ++this.player.level;
+
+            this.eventBus({
+                type: 'levelUp',
+                previousDamage: oldStats.damage,
+                previousArmor: oldStats.armor,
+            });
+        }
     }
 
     draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void {

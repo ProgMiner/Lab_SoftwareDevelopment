@@ -6,6 +6,7 @@ import { GameInterfaceEventHandler } from './core/handlers/GameInterfaceEventHan
 import { DebugInfoEventHandler } from './core/handlers/DebugInfoEventHandler';
 import { PlayerDieEventHandler } from './core/handlers/PlayerDieEventHandler';
 import { MainMenuEventHandler } from './core/handlers/MainMenuEventHandler';
+import { LevelUpEventHandler } from './core/handlers/LevelUpEventHandler';
 import { EventBus } from './core/events/EventBus';
 import { State } from './states/State';
 
@@ -32,6 +33,7 @@ if (canvas instanceof HTMLCanvasElement) {
         MainMenuEventHandler,
         GameWorldEventHandler,
         GameInterfaceEventHandler(),
+        LevelUpEventHandler(),
         PlayerDieEventHandler,
         DebugInfoEventHandler(),
         ChangePreviousUpdateTimeEventHandler,

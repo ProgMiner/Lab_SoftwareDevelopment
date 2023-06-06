@@ -79,7 +79,7 @@ export abstract class AbstractMob<Self extends AbstractMob<Self>>
      */
     protected hit(damage: number, world: GameWorld): void {
         if (damage >= this.health) {
-            world.player.giveXp(this.experience);
+            world.givePlayerXp(this.experience);
             world.removeObject(this);
         }
 

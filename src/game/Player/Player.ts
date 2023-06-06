@@ -9,7 +9,7 @@ import person from './person.png';
 
 const DEFAULT_MAX_HEALTH = 10;
 const DEFAULT_BASE_DAMAGE = 1;
-const DEFAULT_BASE_ARMOR = 0;
+const DEFAULT_BASE_ARMOR = 1;
 
 loadTexture(person);
 
@@ -53,6 +53,17 @@ export class Player implements GameObject {
     xp: number = 0;
 
     /**
+     * Player's level
+     */
+    level: number = 1;
+
+    /**
+     * Cost of first level in experience points,
+     * for higher levels calculated using {@link nextLevelCost}
+     */
+    baseLevelCost: number = 1;
+
+    /**
      * Equipped items
      *
      * For each {@link EquipmentType} may be equipped only one item in same time
@@ -65,7 +76,7 @@ export class Player implements GameObject {
      * Calculate actual damage
      */
     get actualDamage(): number {
-        let result = this.baseDamage;
+        let result = this.baseDamage * this.level;
 
         for (const item of this.equipment) {
             if (item === undefined) {
@@ -84,7 +95,7 @@ export class Player implements GameObject {
      * Calculate actual armor
      */
     get actualArmor(): number {
-        let result = this.baseArmor;
+        let result = this.baseArmor * this.level;
 
         for (const item of this.equipment) {
             if (item === undefined) {
@@ -97,6 +108,13 @@ export class Player implements GameObject {
         }
 
         return result;
+    }
+
+    /**
+     * Returns cost of next level in experience points
+     */
+    get nextLevelCost(): number {
+        return this.baseLevelCost * Math.pow(this.level, 2);
     }
 
     /**
@@ -129,15 +147,6 @@ export class Player implements GameObject {
         this.equipment[item.equipmentType] = item;
 
         return prev;
-    }
-
-    /**
-     * Increases player's experience points on specified value
-     *
-     * @param xp experience points
-     */
-    giveXp(xp: number) {
-        this.xp += xp;
     }
 
     draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void {

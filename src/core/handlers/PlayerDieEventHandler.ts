@@ -4,6 +4,9 @@ import { EventHandler } from '../events/EventBus';
 import { State } from '../../states/State';
 
 
+/**
+ * Event handler that shows death screen after player's die
+ */
 export const PlayerDieEventHandler: EventHandler<State> = (state, event) => {
     if (!isGameState(state)) {
         return;
