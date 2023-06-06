@@ -21,17 +21,29 @@ export class Mimic extends AbstractMob<Mimic> {
 
     experience: number = 1;
 
-    item: Item;
+    private _item: Item;
 
-    private readonly droppedItem: DroppedItem;
+    private droppedItem: DroppedItem;
 
     protected readonly self: Mimic = this;
+
+    /**
+     * Item used as Mimic's look
+     */
+    get item(): Item {
+        return this._item;
+    }
+
+    set item(value: Item) {
+        this._item = value;
+        this.droppedItem = new DroppedItem(value, this.coordinates);
+    }
 
     constructor(item: Item, coordinates: Coordinates) {
         super(coordinates, NO_TEXTURE, new PassiveBehaviourModel());
 
-        this.item = item;
-        this.droppedItem = new DroppedItem(this.item, this.coordinates);
+        this._item = item;
+        this.droppedItem = new DroppedItem(item, this.coordinates);
     }
 
     draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates) {

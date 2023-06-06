@@ -1,8 +1,14 @@
 import { Coordinates } from './Coordinates';
 
 
+/**
+ * Constant value to specify that no texture needed to draw
+ */
 export const NO_TEXTURE = Symbol('no texture');
 
+/**
+ * Type of texture
+ */
 export type Texture = string | typeof NO_TEXTURE;
 
 const textures = new Map<Texture, HTMLImageElement>();

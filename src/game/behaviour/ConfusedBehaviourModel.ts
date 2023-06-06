@@ -1,8 +1,9 @@
+import random from 'random';
+
 import { shuffleInplace } from '../../utils/shuffle';
 import { BehaviourModel } from './BehaviourModel';
 import { GameWorld } from '../GameWorld';
 import { Movable } from '../Movable';
-import random from 'random';
 
 
 /**

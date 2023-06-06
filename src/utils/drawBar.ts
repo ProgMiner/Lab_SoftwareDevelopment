@@ -1,15 +1,42 @@
 import { Coordinates } from './Coordinates';
 
 
+/**
+ * Options for {@link drawBar} function
+ */
 export interface DrawBarOptions {
 
+    /**
+     * Background color of bar, default `#ccc`
+     */
     backgroundColor?: string;
+
+    /**
+     * Border color of bar, default `#000`
+     */
     borderColor?: string;
+
+    /**
+     * Border width of bar, default `3`
+     */
     borderWidth?: number;
 }
 
+/**
+ * Color for health bar
+ */
 export const HEALTH_BAR_COLOR = '#e74236';
 
+/**
+ * Draws bar filled on specified value (must be in range 0..1)
+ *
+ * @param value displaying value
+ * @param context canvas context
+ * @param center center of bar
+ * @param size size of bar
+ * @param foregroundColor color of filled part of bar
+ * @param options options
+ */
 export const drawBar = (
     value: number,
     context: CanvasRenderingContext2D,

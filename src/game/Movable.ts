@@ -26,6 +26,13 @@ export interface Movable extends GameObject {
     moveTo(newPosition: Coordinates, world: GameWorld): boolean;
 }
 
+/**
+ * Checks is game object movable
+ *
+ * @param object game object to check
+ *
+ * @return is {@link Movable}
+ */
 export const isMovable = (object: GameObject): object is Movable => {
     return 'onMove' in object;
 };
