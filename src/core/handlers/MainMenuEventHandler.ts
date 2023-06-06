@@ -17,6 +17,7 @@ import { GameStateState } from '../../states/GameState';
 import { Robot } from '../../game/mobs/Robot/Robot';
 import { Ghost } from '../../game/mobs/Ghost/Ghost';
 import { Mimic } from '../../game/mobs/Mimic';
+import { Mob } from '../../game/mobs/Mob';
 
 import world from '../../worlds/test.world';
 
@@ -138,10 +139,14 @@ const makeGame1 = (eventBus: EventBus): GameWorld => {
 }
 
 const makeGame2 = async (eventBus: EventBus) => {
-    return new BoxedWorldGenerator(eventBus, 5, 2, new Coordinates(6, 5), new UniformItemGenerator([
+    return new BoxedWorldGenerator(eventBus, 5, 2, 2, new Coordinates(6, 5), new UniformItemGenerator([
         [constGenerator(() => new Sword()), 1],
         [constGenerator(() => new GoldenApple()), 1],
-    ])).generate(seededRandom('' + performance.now()));
+    ]), {
+        generate(): Promise<Mob> {
+            throw new Error('not implemented');
+        }
+    }).generate(seededRandom('' + performance.now()));
 }
 
 const makeGame3 = async (eventBus: EventBus) => {

@@ -1,6 +1,6 @@
 import { Random } from 'random';
 
-import { ItemGenerator, WorldGenerator } from './Generator';
+import { ItemGenerator, MobGenerator, WorldGenerator } from './Generator';
 import { delayPromise } from '../../utils/delayPromise';
 import { Coordinates } from '../../utils/Coordinates';
 import { EventBus } from '../../core/events/EventBus';
@@ -36,29 +36,37 @@ export class BoxedWorldGenerator implements WorldGenerator {
 
     private readonly maxDepth: number;
     private readonly maxItemsInRoom: number;
+    private readonly maxMobsInRoom: number;
     private readonly boxSize: Coordinates;
 
     private readonly itemGenerator: ItemGenerator;
+    private readonly mobGenerator: MobGenerator;
 
     /**
      * @param eventBus event bus to set in world
      * @param maxDepth max depth of generating tree
      * @param maxItemsInRoom max amount of items in each room
+     * @param maxMobsInRoom max amount of mobs in each room
      * @param boxSize box size (width and height)
-     * @param itemGenerator item generator
+     * @param itemGenerator items generator
+     * @param mobGenerator mobs generator
      */
     constructor(
         eventBus: EventBus,
         maxDepth: number,
         maxItemsInRoom: number,
+        maxMobsInRoom: number,
         boxSize: Coordinates,
         itemGenerator: ItemGenerator,
+        mobGenerator: MobGenerator,
     ) {
         this.eventBus = eventBus;
         this.maxDepth = maxDepth;
         this.maxItemsInRoom = maxItemsInRoom;
+        this.maxMobsInRoom = maxMobsInRoom;
         this.boxSize = boxSize;
         this.itemGenerator = itemGenerator;
+        this.mobGenerator = mobGenerator;
     }
 
     async generate(random: Random): Promise<GameWorld> {

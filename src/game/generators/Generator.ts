@@ -2,6 +2,7 @@ import { Random } from 'random';
 
 import { GameWorld } from '../GameWorld';
 import { Item } from '../items/Item';
+import { Mob } from '../mobs/Mob';
 
 
 /**
@@ -18,6 +19,8 @@ export interface Generator<T> {
      * in order to not freeze browser UI
      *
      * @param {Random} random instance of random to control random seed
+     *
+     * @return promise of generated value
      */
     generate(random: Random): Promise<T>;
 }
@@ -31,6 +34,11 @@ export type WorldGenerator = Generator<GameWorld>;
  * Generator of items
  */
 export type ItemGenerator = Generator<Item>;
+
+/**
+ * Generator of mobs
+ */
+export type MobGenerator = Generator<Mob>;
 
 // noinspection JSValidateJSDoc
 /**
