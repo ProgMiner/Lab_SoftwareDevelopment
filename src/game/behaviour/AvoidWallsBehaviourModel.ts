@@ -1,7 +1,6 @@
 import random from 'random'
 
 import { PassiveBehaviourModel } from './PassiveBehaviourModel';
-import { Coordinates } from '../../utils/Coordinates';
 import { shuffleInplace } from '../../utils/shuffle';
 import { BehaviourModel } from './BehaviourModel';
 import { GameWorld } from '../GameWorld';
@@ -32,14 +31,7 @@ export class AvoidWallsBehaviourModel<Self extends Movable> implements Behaviour
             return this.noWallsBehaviour.onMove(self, world);
         }
 
-        const baseCell = self.coordinates;
-
-        const positions = shuffleInplace([
-            new Coordinates(baseCell.x + 1, baseCell.y),
-            new Coordinates(baseCell.x, baseCell.y + 1),
-            new Coordinates(baseCell.x - 1, baseCell.y),
-            new Coordinates(baseCell.x, baseCell.y - 1),
-        ], random);
+        const positions = shuffleInplace(self.coordinates.adjacent(), random);
 
         for (const position of positions) {
             if (self.moveTo(position, world)) {

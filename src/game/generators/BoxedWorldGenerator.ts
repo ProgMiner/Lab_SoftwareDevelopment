@@ -200,12 +200,7 @@ export class BoxedWorldGenerator implements WorldGenerator {
             if (depth < this.maxDepth) {
                 const doorsNumber = doorsNumberGenerator();
 
-                const boxDoors = sample(doorsNumber, [
-                    new Coordinates(coords.x - 1, coords.y),
-                    new Coordinates(coords.x + 1, coords.y),
-                    new Coordinates(coords.x, coords.y - 1),
-                    new Coordinates(coords.x, coords.y + 1),
-                ], random);
+                const boxDoors = sample(doorsNumber, coords.adjacent(), random);
 
                 for (const door of boxDoors) {
                     doors.add(stringifyDoor(coords, door));

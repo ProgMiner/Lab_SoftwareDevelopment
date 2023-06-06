@@ -14,7 +14,7 @@ export abstract class SimpleBehaviourMovable<Self extends SimpleBehaviourMovable
     /**
      * Current behaviour model
      */
-    protected actualBehaviourModel: BehaviourModel<Self>;
+    actualBehaviourModel: BehaviourModel<Self>;
 
     /**
      * @param coordinates initial coordinates
