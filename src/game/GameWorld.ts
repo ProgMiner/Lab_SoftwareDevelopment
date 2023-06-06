@@ -17,6 +17,11 @@ import { Drawable } from './Drawable';
 export class GameWorld implements Drawable {
 
     /**
+     * Amount of rays in {@link isPlayerVisibleFrom}
+     */
+    private static readonly IS_PLAYER_VISIBLE_FROM_RAYS_COUNT = 10;
+
+    /**
      * Array of game objects, placed in world
      *
      * By default, only player
@@ -191,6 +196,74 @@ export class GameWorld implements Drawable {
     }
 
     /**
+     * Checks is player's cell visible from specified point in world
+     *
+     * @param point point of view
+     * @param filterFunction filter for opaque objects, default all impassable
+     *
+     * @return is player visible from point
+     */
+    isPlayerVisibleFrom(
+        point: Coordinates,
+        filterFunction: (object: GameObject) => boolean = object => !object.isPassable,
+    ): boolean {
+        if (this.player.collides(point)) {
+            return true;
+        }
+
+        const newFilterFunction = (object: GameObject) => object instanceof Player || filterFunction(object);
+
+        const cell = this.player.coordinates;
+        if (cell.equals(point.round())) {
+            return true;
+        }
+
+        const corners: [Coordinates, number][] = [
+            new Coordinates(cell.x + 0.5, cell.y + 0.5),
+            new Coordinates(cell.x + 0.5, cell.y - 0.5),
+            new Coordinates(cell.x - 0.5, cell.y + 0.5),
+            new Coordinates(cell.x - 0.5, cell.y - 0.5),
+        ].map(c => point.vectorTo(c)).map(c => [c, c.atan2()]);
+
+        const negCount = corners.filter(([_, a]) => a < 0).length;
+
+        if (negCount % 2 != 0) {
+            console.error('Unexpected case', corners, point);
+            return false;
+        }
+
+        corners.sort(([_1, a], [_2, b]) => a - b);
+
+        let cornerA: Coordinates, cornerB: Coordinates;
+        // let angle: number;
+
+        // bad case for atan2
+        if (negCount === 2 && corners.every(([_, a]) => Math.abs(a) > Math.PI / 2)) {
+            cornerA = corners[2]![0];
+            cornerB = corners[1]![0];
+            // angle = 2 * Math.PI + corners[1][1] - corners[2][1];
+        } else {
+            cornerA = corners[0]![0];
+            cornerB = corners[3]![0];
+            // angle = corners[3][1] - corners[0][1];
+        }
+
+        const n = GameWorld.IS_PLAYER_VISIBLE_FROM_RAYS_COUNT;
+        for (let i = 0; i <= n; ++i) {
+            const visibleObjects = this.rayTrace(point, new Coordinates(
+                (cornerA.x * i + cornerB.x * (n - i)) / n,
+                (cornerA.y * i + cornerB.y * (n - i)) / n,
+            ), newFilterFunction, true, true);
+
+            if (visibleObjects.includes(this.player)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Ray trace from point in world in specified direction with
      * maximum ray distance of length of distance vector
      *
@@ -198,6 +271,7 @@ export class GameWorld implements Drawable {
      * @param direction direction and length vector
      * @param filterFunction filter for checking objects
      * @param stopOnFirst if `true` returns only first colliding object
+     * @param handleCorners if `true` checks adjacent cells when ray passing on diagonal cell
      *
      * @return array of colliding objects
      */
@@ -206,10 +280,11 @@ export class GameWorld implements Drawable {
         direction: Coordinates,
         filterFunction: (object: GameObject) => boolean = (object) => !object.isPassable,
         stopOnFirst: boolean = true,
+        handleCorners: boolean = true,
     ): GameObject[] {
         const result = [];
 
-        for (const cell of GameWorld.rayTraceCells(startPoint, direction)) {
+        for (const cell of GameWorld.rayTraceCells(startPoint, direction, handleCorners)) {
             result.push(...this.checkCollisionWithObjects(cell, filterFunction, stopOnFirst));
 
             if (stopOnFirst && result.length > 0) {
@@ -226,17 +301,19 @@ export class GameWorld implements Drawable {
      *
      * @param startPoint start point of ray tracing
      * @param direction direction and length vector
+     * @param handleCorners if `true` returns adjacent cells when ray passing on diagonal cell
      *
      * @return iterable of cells from start to end
      */
     static *rayTraceCells(
         startPoint: Coordinates,
         direction: Coordinates,
+        handleCorners: boolean = false,
     ): IterableIterator<Coordinates> {
         const maxLength = direction.length();
         const angle = direction.atan2();
 
-        let cell = new Coordinates(Math.round(startPoint.x), Math.round(startPoint.y));
+        let cell = startPoint.round();
 
         let point = startPoint;
         while (startPoint.vectorTo(point).length() <= maxLength) {
@@ -276,6 +353,11 @@ export class GameWorld implements Drawable {
                 cell = variants[0][0];
                 point = variants[0][1];
             } else if (angle === splittingAngle) {
+                if (handleCorners) {
+                    yield variants[0][0];
+                    yield variants[2][0];
+                }
+
                 cell = variants[1][0];
                 point = variants[1][1];
             } else {

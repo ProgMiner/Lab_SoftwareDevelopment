@@ -61,6 +61,13 @@ export class Coordinates {
     }
 
     /**
+     * Returns rounded coordinates
+     */
+    round(): Coordinates {
+        return new Coordinates(Math.round(this.x), Math.round(this.y));
+    }
+
+    /**
      * Check is equals to other coordinates object
      *
      * @param that object to check with
