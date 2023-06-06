@@ -25,7 +25,7 @@ export const moveToPoint = <Self extends Movable>(point: Coordinates, self: Self
 }
 
 const findNearestCellToPoint = (baseCell: Coordinates, point: Coordinates): Coordinates[] => {
-    const candidates: [Coordinates, number][] = baseCell.adjacent()
+    const candidates: [Coordinates, number][] = baseCell.adjacent(true)
         .map(c => [c, c.vectorTo(point).length()]);
 
     return candidates.sort(([_1, a], [_2, b]) => a - b).map(([c, _]) => c);

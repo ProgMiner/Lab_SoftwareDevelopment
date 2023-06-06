@@ -42,7 +42,17 @@ export class GameWorld implements Drawable {
      */
     updateDistance: number = 0;
 
+    /**
+     * Is in debug mode
+     */
+    debug: boolean = false;
+
     private readonly _eventBus: EventBus;
+
+    private debugUpdatedObjects: Coordinates[] = [];
+
+    private debugTracedRays: [Coordinates, Coordinates][] = [];
+    private debugTracedCells: Coordinates[] = [];
 
     /**
      * Current event bus
@@ -127,12 +137,23 @@ export class GameWorld implements Drawable {
             return false;
         }
 
+        if (this.debug) {
+            this.debugUpdatedObjects = [];
+            this.debugTracedRays = [];
+            this.debugTracedCells = [];
+        }
+
         this.player.coordinates = newPosition;
 
         // need to copy because of concurrent modification
         for (const object of [...this.objects]) {
             if (!object.needUpdate(newPosition, this.updateDistance)) {
                 continue;
+            }
+
+            if (this.debug) {
+                this.debugUpdatedObjects.push(object.coordinates);
+                console.log(object);
             }
 
             if (isMovable(object)) {
@@ -238,6 +259,62 @@ export class GameWorld implements Drawable {
                 center.x + coords.x * scale.x,
                 center.y + coords.y * scale.y,
             ), scale);
+        }
+
+        if (this.debug) {
+            context.save();
+
+            context.strokeStyle = '#0f0';
+            context.lineWidth = 1;
+
+            for (const cell of this.debugTracedCells) {
+                const coords = this.player.coordinates.vectorTo(cell);
+
+                context.strokeRect(
+                    center.x + coords.x * scale.x - scale.x / 2,
+                    center.y + coords.y * scale.y - scale.y / 2,
+                    scale.x,
+                    scale.y,
+                );
+            }
+
+            context.strokeStyle = '#f00';
+
+            for (const [a, b] of this.debugTracedRays) {
+                const coordsA = this.player.coordinates.vectorTo(a);
+                const coordsB = this.player.coordinates.vectorTo(b);
+
+                context.beginPath();
+                context.moveTo(
+                    center.x + coordsA.x * scale.x,
+                    center.y + coordsA.y * scale.y,
+                );
+                context.lineTo(
+                    center.x + coordsB.x * scale.x,
+                    center.y + coordsB.y * scale.y,
+                );
+                context.stroke();
+            }
+
+            context.fillStyle = '#00f';
+
+            for (const object of this.debugUpdatedObjects) {
+                const coords = this.player.coordinates.vectorTo(object);
+
+                context.beginPath();
+                context.ellipse(
+                    center.x + coords.x * scale.x,
+                    center.y + coords.y * scale.y,
+                    scale.x / 10,
+                    scale.y / 10,
+                    0,
+                    0,
+                    2 * Math.PI,
+                );
+                context.fill();
+            }
+
+            context.restore();
         }
     }
 
@@ -363,7 +440,7 @@ export class GameWorld implements Drawable {
     ): GameObject[] {
         const result = [];
 
-        for (const cell of GameWorld.rayTraceCells(startPoint, direction, handleCorners)) {
+        for (const cell of this.rayTraceCells(startPoint, direction, handleCorners)) {
             result.push(...this.checkCollisionWithObjects(cell, filterFunction, stopOnFirst));
 
             if (stopOnFirst && result.length > 0) {
@@ -384,11 +461,18 @@ export class GameWorld implements Drawable {
      *
      * @return iterable of cells from start to end
      */
-    static *rayTraceCells(
+    *rayTraceCells(
         startPoint: Coordinates,
         direction: Coordinates,
         handleCorners: boolean = false,
     ): IterableIterator<Coordinates> {
+        if (this.debug) {
+            this.debugTracedRays.push([
+                startPoint,
+                new Coordinates(startPoint.x + direction.x, startPoint.y + direction.y),
+            ]);
+        }
+
         const maxLength = direction.length();
         const angle = direction.atan2();
 
@@ -396,6 +480,10 @@ export class GameWorld implements Drawable {
 
         let point = startPoint;
         while (startPoint.vectorTo(point).length() <= maxLength) {
+            if (this.debug) {
+                this.debugTracedCells.push(cell);
+            }
+
             yield cell;
 
             let variants: [[Coordinates, Coordinates], [Coordinates, Coordinates], [Coordinates, Coordinates]];
