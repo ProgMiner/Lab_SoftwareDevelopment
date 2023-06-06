@@ -21,7 +21,7 @@ if (canvas instanceof HTMLCanvasElement) {
     const state: State = {
         state: 'mainMenu',
         canvas,
-        context: canvas.getContext('2d')!!,
+        context: canvas.getContext('2d')!,
         previousUpdateTime: performance.now(),
     };
 

@@ -15,7 +15,7 @@ export const shuffleInplace = <T>(array: T[], random: Random): T[] => {
     while (--i > 0) {
         const randIndex = random.integer(0, i);
 
-        [array[randIndex], array[i]] = [array[i]!!, array[randIndex]!!];
+        [array[randIndex], array[i]] = [array[i]!, array[randIndex]!];
     }
 
     return array;

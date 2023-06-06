@@ -24,7 +24,7 @@ export class Wall implements GameObject {
 
     draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void {
         for (let i = 0; i < this.matrix.length; ++i) {
-            const row = this.matrix[i]!!;
+            const row = this.matrix[i]!;
 
             for (let j = 0; j < row.length; ++j) {
                 if (row[j]) {
@@ -90,10 +90,10 @@ export class Wall implements GameObject {
         const j = coordinates.x - this.coordinates.x;
 
         if (i >= 0 && i < this.matrix.length) {
-            const row = this.matrix[i]!!;
+            const row = this.matrix[i]!;
 
             if (j >= 0 && j < row.length) {
-                return row[j]!!;
+                return row[j]!;
             }
         }
     }
