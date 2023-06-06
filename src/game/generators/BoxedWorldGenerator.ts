@@ -178,12 +178,12 @@ export class BoxedWorldGenerator extends AbstractGenerator<GameWorld> implements
         const doors = new Set<string>();
         const boxes: Box[] = [];
 
-        const indexToCoords: Coordinates[] = [new Coordinates(0, 0)];
+        const indexToCoords: Coordinates[] = [Coordinates.ZERO];
         const coordsToIndex = new Map<string, number>();
         const queue: [number, number][] = [[0, 0]];
         const remaining = new Set<number>();
 
-        coordsToIndex.set(new Coordinates(0, 0).toString(), 0);
+        coordsToIndex.set(Coordinates.ZERO.toString(), 0);
         remaining.add(0);
 
         const doorsNumberGenerator = random.uniformInt(0, 4);

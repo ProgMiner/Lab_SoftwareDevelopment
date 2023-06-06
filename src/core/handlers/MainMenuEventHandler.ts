@@ -8,6 +8,8 @@ import { Sword } from '../../game/items/Sword/Sword';
 import { GoldenApple } from '../../game/items/GoldenApple/GoldenApple';
 import { GeneratorsWorldBuilder } from '../../game/builders/GeneratorsWorldBuilder';
 import { UniformItemGenerator, UniformMobGenerator } from '../../game/generators/UniformGenerator';
+import { MagicalMobGenerator } from '../../game/generators/MagicalMobGenerator';
+import { TechnoMobGenerator } from '../../game/generators/TechnoMobGenerator';
 import { constGenerator } from '../../game/generators/constGenerator';
 import { seededRandom } from '../../utils/seededRandom';
 import { DEFAULT_FONT_FAMILY, drawText } from '../../utils/drawText';
@@ -70,7 +72,7 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event, eventBus
             darknessRadius: 130,
             scale: new Coordinates(100, 100),
             updateDistance: 10,
-            cameraOffset: new Coordinates(0, 0),
+            cameraOffset: Coordinates.ZERO,
         };
 
         // TODO load screen
@@ -143,9 +145,8 @@ const makeGame2 = async (eventBus: EventBus) => {
     ]);
 
     const mobGenerator = new UniformMobGenerator([
-        [itemGenerator.map(item => new Mimic(item, new Coordinates(0, 0))), 3],
-        [constGenerator(() => new Robot(new Coordinates(0, 0))), 2],
-        [constGenerator(() => new Ghost(new Coordinates(0, 0))), 2],
+        [new MagicalMobGenerator(itemGenerator, { Mimic: 3, Ghost: 2 }), 5],
+        [new TechnoMobGenerator({ Robot: 2 }), 2],
     ]);
 
     return new GeneratorsWorldBuilder().random()

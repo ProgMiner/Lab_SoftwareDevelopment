@@ -38,7 +38,7 @@ export class FileWorldGenerator extends AbstractGenerator<GameWorld> implements 
     private readonly objects: GameObject[] = [];
 
     private wall!: Wall;
-    private playerPosition: Coordinates = new Coordinates(0, 0);
+    private playerPosition: Coordinates = Coordinates.ZERO;
 
     /**
      * @param content content of file to parse
