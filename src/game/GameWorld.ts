@@ -151,16 +151,18 @@ export class GameWorld implements Drawable {
 
         this.removeObject(object);
 
-        if (onlyOnPassable) {
-            if (this.checkCollisionWithObjects(newPosition).length > 0) {
-                return false;
+        try {
+            if (onlyOnPassable) {
+                if (this.checkCollisionWithObjects(newPosition).length > 0) {
+                    return false;
+                }
             }
+
+            object.coordinates = newPosition;
+            return true;
+        } finally {
+            this.placeObject(object);
         }
-
-        object.coordinates = newPosition;
-
-        this.placeObject(object);
-        return true;
     }
 
     /**
