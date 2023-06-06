@@ -1,4 +1,6 @@
 import { SimpleBehaviourMovable } from '../behaviour/SimpleBehaviourMovable';
+import { TemporalBehaviourModel } from '../behaviour/TemporalBehaviourModel';
+import { ConfusedBehaviourModel } from '../behaviour/ConfusedBehaviourModel';
 import { drawBar, HEALTH_BAR_COLOR } from '../../utils/drawBar';
 import { Coordinates } from '../../utils/Coordinates';
 import { GameWorld } from '../GameWorld';
@@ -61,7 +63,11 @@ export abstract class AbstractMob<Self extends AbstractMob<Self>>
     onStep(world: GameWorld): void {
         const { player } = world;
 
-        this.hit(GameWorld.calcDamage(player.actualDamage, this.armor), world);
+        const damage = GameWorld.calcDamage(player.actualDamage, this.armor);
+
+        this.hit(damage, world);
+        TemporalBehaviourModel.decorate(this.self, damage, new ConfusedBehaviourModel());
+
         world.hitPlayer(this.damage);
     }
 
