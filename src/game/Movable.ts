@@ -1,3 +1,4 @@
+import { Coordinates } from '../utils/Coordinates';
 import { GameObject } from './GameObject';
 import { GameWorld } from './GameWorld';
 
@@ -13,6 +14,16 @@ export interface Movable extends GameObject {
      * @param world current game world
      */
     onMove(world: GameWorld): void;
+
+    /**
+     * Moves object to another point in world
+     *
+     * @param newPosition new position of object
+     * @param world current game world
+     *
+     * @return `true` if object is on `newPosition` after call
+     */
+    moveOn(newPosition: Coordinates, world: GameWorld): boolean;
 }
 
 export const isMovable = (object: GameObject): object is Movable => {

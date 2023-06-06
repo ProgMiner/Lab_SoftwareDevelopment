@@ -25,9 +25,7 @@ export class Mimic extends AbstractMob<Mimic> {
 
     private readonly droppedItem: DroppedItem;
 
-    get self() {
-        return this;
-    }
+    protected readonly self: Mimic = this;
 
     constructor(item: Item, coordinates: Coordinates) {
         super(coordinates, NO_TEXTURE, new PassiveBehaviourModel());

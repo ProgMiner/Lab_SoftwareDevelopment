@@ -78,7 +78,5 @@ export abstract class AbstractMob<Self extends AbstractMob<Self>>
         }
 
         this.health -= damage;
-
-        console.log('HP', this.health);
     }
 }

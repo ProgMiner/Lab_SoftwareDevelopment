@@ -114,13 +114,6 @@ export class GameWorld implements Drawable {
 
         this.player.coordinates = newPosition;
 
-        const triggers = this.checkCollisionWithObjects(newPosition, (object) => object.isPassable, false);
-        for (const trigger of triggers) {
-            if (isTrigger(trigger)) {
-                trigger.onStep(this);
-            }
-        }
-
         for (const object of this.objects) {
             if (!object.needUpdate(newPosition, this.updateDistance)) {
                 continue;
@@ -131,6 +124,41 @@ export class GameWorld implements Drawable {
             }
         }
 
+        const triggers = this.checkCollisionWithObjects(newPosition, (object) => object.isPassable, false);
+        for (const trigger of triggers) {
+            if (isTrigger(trigger)) {
+                trigger.onStep(this);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Moves object to another cell
+     *
+     * @param object object to move
+     * @param newPosition new position
+     * @param onlyOnPassable if `true` moves only on passable cells
+     *
+     * @return `true` if object is on `newPosition` after call
+     */
+    moveObject(object: GameObject, newPosition: Coordinates, onlyOnPassable: boolean = true): boolean {
+        if (object.coordinates.equals(newPosition)) {
+            return true;
+        }
+
+        this.removeObject(object);
+
+        if (onlyOnPassable) {
+            if (this.checkCollisionWithObjects(newPosition).length > 0) {
+                return false;
+            }
+        }
+
+        object.coordinates = newPosition;
+
+        this.placeObject(object);
         return true;
     }
 

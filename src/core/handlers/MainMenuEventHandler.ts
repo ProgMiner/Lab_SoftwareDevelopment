@@ -14,6 +14,7 @@ import { FileWorldGenerator } from '../../game/generators/FileWorldGenerator';
 import { DEFAULT_FONT_FAMILY, drawText } from '../../utils/drawText';
 import { CommonGameState } from '../../states/CommonGameState';
 import { GameStateState } from '../../states/GameState';
+import { Robot } from '../../game/mobs/Robot/Robot';
 import { Mimic } from '../../game/mobs/Mimic';
 
 import world from '../../worlds/test.world';
@@ -127,6 +128,7 @@ const makeGame1 = (eventBus: EventBus): GameWorld => {
     result.placeObject(new DroppedItem(new Sword(), new Coordinates(1, 1)));
     result.placeObject(new DroppedItem(new GoldenApple(), new Coordinates(2, 3)));
     result.placeObject(new Mimic(new GoldenApple(), new Coordinates(2, 2)));
+    result.placeObject(new Robot(new Coordinates(-3, 2)));
 
     result.player.health = 4.23;
 
