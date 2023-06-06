@@ -4,8 +4,8 @@ import { GameObject } from '../GameObject';
 
 import wall from './wall.png';
 
-
-loadTexture(wall);
+if (process.env.NODE_ENV !== 'test')
+    loadTexture(wall);
 
 /**
  * Impassable object of complex shape

@@ -11,7 +11,8 @@ const DEFAULT_MAX_HEALTH = 10;
 const DEFAULT_BASE_DAMAGE = 1;
 const DEFAULT_BASE_ARMOR = 0;
 
-loadTexture(person);
+if (process.env.NODE_ENV !== 'test')
+    loadTexture(person);
 
 /**
  * Game player

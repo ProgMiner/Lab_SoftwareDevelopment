@@ -21,8 +21,10 @@ export const ITEM_SCALE_FACTOR = 56 / 64;
 
 const SELECTED_ITEM_SCALE_FACTOR = 68 / 64;
 
-loadTexture(inventoryTexture);
-loadTexture(selectedItemTexture);
+if (process.env.NODE_ENV !== 'test') {
+    loadTexture(inventoryTexture);
+    loadTexture(selectedItemTexture);
+}
 
 /**
  * Player's inventory
