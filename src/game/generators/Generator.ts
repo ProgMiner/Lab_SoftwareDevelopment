@@ -23,6 +23,15 @@ export interface Generator<T> {
      * @return promise of generated value
      */
     generate(random: Random): Promise<T>;
+
+    /**
+     * Maps generator with specified mapping function
+     *
+     * @param fn mapping function
+     *
+     * @return new generator
+     */
+    map<V>(fn: (value: T, random: Random) => V): Generator<V>;
 }
 
 /**
@@ -39,16 +48,3 @@ export type ItemGenerator = Generator<Item>;
  * Generator of mobs
  */
 export type MobGenerator = Generator<Mob>;
-
-// noinspection JSValidateJSDoc
-/**
- * Generic generator of non-random values
- *
- * @template T type of generating values
- *
- * @param {() => T} value factory of generating values
- */
-export const constGenerator = <T>(value: () => T): Generator<T> => ({
-
-    generate: async () => value(),
-});

@@ -7,8 +7,8 @@ import { DroppedItem } from '../../game/DroppedItem';
 import { Sword } from '../../game/items/Sword/Sword';
 import { GoldenApple } from '../../game/items/GoldenApple/GoldenApple';
 import { BoxedWorldGenerator } from '../../game/generators/BoxedWorldGenerator';
-import { constGenerator } from '../../game/generators/Generator';
-import { UniformItemGenerator } from '../../game/generators/UniformItemGenerator';
+import { UniformItemGenerator, UniformMobGenerator } from '../../game/generators/UniformGenerator';
+import { constGenerator } from '../../game/generators/constGenerator';
 import { seededRandom } from '../../utils/seededRandom';
 import { FileWorldGenerator } from '../../game/generators/FileWorldGenerator';
 import { DEFAULT_FONT_FAMILY, drawText } from '../../utils/drawText';
@@ -17,7 +17,6 @@ import { GameStateState } from '../../states/GameState';
 import { Robot } from '../../game/mobs/Robot/Robot';
 import { Ghost } from '../../game/mobs/Ghost/Ghost';
 import { Mimic } from '../../game/mobs/Mimic';
-import { Mob } from '../../game/mobs/Mob';
 
 import world from '../../worlds/test.world';
 
@@ -139,14 +138,19 @@ const makeGame1 = (eventBus: EventBus): GameWorld => {
 }
 
 const makeGame2 = async (eventBus: EventBus) => {
-    return new BoxedWorldGenerator(eventBus, 5, 2, 2, new Coordinates(6, 5), new UniformItemGenerator([
-        [constGenerator(() => new Sword()), 1],
+    const itemGenerator = new UniformItemGenerator([
+        [constGenerator(() => new Sword()), 2],
         [constGenerator(() => new GoldenApple()), 1],
-    ]), {
-        generate(): Promise<Mob> {
-            throw new Error('not implemented');
-        }
-    }).generate(seededRandom('' + performance.now()));
+    ]);
+
+    const mobGenerator = new UniformMobGenerator([
+        [itemGenerator.map(item => new Mimic(item, new Coordinates(0, 0))), 3],
+        [constGenerator(() => new Robot(new Coordinates(0, 0))), 2],
+        [constGenerator(() => new Ghost(new Coordinates(0, 0))), 2],
+    ]);
+
+    return new BoxedWorldGenerator(eventBus, 5, 2, 2, new Coordinates(6, 5), itemGenerator, mobGenerator)
+        .generate(seededRandom('' + performance.now()));
 }
 
 const makeGame3 = async (eventBus: EventBus) => {

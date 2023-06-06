@@ -16,8 +16,8 @@ export class Mimic extends AbstractMob<Mimic> {
     health: number = 5;
     readonly maxHealth: number = 5;
 
-    damage: number = 1;
-    armor: number = 0;
+    damage: number = 2;
+    armor: number = 1;
 
     experience: number = 1;
 

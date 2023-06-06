@@ -433,12 +433,14 @@ export class GameWorld implements Drawable {
     /**
      * Calculate damage
      *
+     * Guaranteed that result is non-negative
+     *
      * @param damage damage points of attacker
      * @param armor armor points of attacked
      *
      * @return result damage
      */
     static calcDamage(damage: number, armor: number): number {
-        return damage - armor;
+        return Math.max(0, damage - armor);
     }
 }

@@ -1,4 +1,5 @@
 import { GoldenApple } from '../items/GoldenApple/GoldenApple';
+import { AbstractGenerator } from './AbstractGenerator';
 import { Coordinates } from '../../utils/Coordinates';
 import { EventBus } from '../../core/events/EventBus';
 import { WorldGenerator } from './Generator';
@@ -28,7 +29,7 @@ import { Wall } from '../Wall/Wall';
  * - `Player` hole filler, places player, no data
  * - `Item` hole filler, places item, data is item type: `Sword` or `GoldenApple`
  */
-export class FileWorldGenerator implements WorldGenerator {
+export class FileWorldGenerator extends AbstractGenerator<GameWorld> implements WorldGenerator {
 
     private static readonly WHITESPACE = /\s+/;
 
@@ -44,8 +45,9 @@ export class FileWorldGenerator implements WorldGenerator {
      * @param eventBus current event bus
      */
     constructor(content: string, eventBus: EventBus) {
-        this.eventBus = eventBus;
+        super();
 
+        this.eventBus = eventBus;
         this.parseFile(content);
     }
 
