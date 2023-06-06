@@ -47,6 +47,7 @@ export abstract class AbstractMob extends SimpleBehaviourMovable implements Mob 
         const damage = GameWorld.calcDamage(player.actualDamage, this.armor);
 
         this.hit(damage, world);
+        // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
         TemporalBehaviourModel.decorate(this, damage, new ConfusedBehaviourModel());
 
         world.hitPlayer(this.damage);

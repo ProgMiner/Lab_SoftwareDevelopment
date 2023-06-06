@@ -24,6 +24,7 @@ export abstract class BehaviourMovable extends AbstractMovable {
     }
 
     onMove(world: GameWorld): void {
+        // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
         this.behaviourModel(world).onMove(this, world);
     }
 

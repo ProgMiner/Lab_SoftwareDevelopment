@@ -6,11 +6,10 @@ import { Wall } from '../../game/Wall/Wall';
 import { DroppedItem } from '../../game/DroppedItem';
 import { Sword } from '../../game/items/Sword/Sword';
 import { GoldenApple } from '../../game/items/GoldenApple/GoldenApple';
-import { BoxedWorldGenerator } from '../../game/generators/BoxedWorldGenerator';
+import { GeneratorsWorldBuilder } from '../../game/builders/GeneratorsWorldBuilder';
 import { UniformItemGenerator, UniformMobGenerator } from '../../game/generators/UniformGenerator';
 import { constGenerator } from '../../game/generators/constGenerator';
 import { seededRandom } from '../../utils/seededRandom';
-import { FileWorldGenerator } from '../../game/generators/FileWorldGenerator';
 import { DEFAULT_FONT_FAMILY, drawText } from '../../utils/drawText';
 import { CommonGameState } from '../../states/CommonGameState';
 import { GameStateState } from '../../states/GameState';
@@ -149,10 +148,17 @@ const makeGame2 = async (eventBus: EventBus) => {
         [constGenerator(() => new Ghost(new Coordinates(0, 0))), 2],
     ]);
 
-    return new BoxedWorldGenerator(eventBus, 5, 2, 2, new Coordinates(6, 5), itemGenerator, mobGenerator)
-        .generate(seededRandom('' + performance.now()));
+    return new GeneratorsWorldBuilder().random()
+        .eventBus(eventBus)
+        .randomInstance(seededRandom('' + performance.now()))
+        .maxDepth(5)
+        .maxItemsInRoom(3)
+        .maxMobsInRoom(2)
+        .boxSize(new Coordinates(6, 5))
+        .itemGenerator(itemGenerator)
+        .mobGenerator(mobGenerator)
+        .build();
 }
 
-const makeGame3 = async (eventBus: EventBus) => {
-    return (await FileWorldGenerator.loadFile(world, eventBus)).generate();
-};
+const makeGame3 = async (eventBus: EventBus) => new GeneratorsWorldBuilder().fromFile()
+    .eventBus(eventBus).filename(world).build();
