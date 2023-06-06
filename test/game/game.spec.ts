@@ -1,3 +1,5 @@
+import { createCanvas } from 'canvas';
+
 import { GameWorld } from '../../src/game/GameWorld';
 import { Player } from '../../src/game/Player/Player';
 import { GameObject } from '../../src/game/GameObject';
@@ -6,13 +8,23 @@ import { EventBus } from '../../src/core/events/EventBus';
 import { State } from '../../src/states/State';
 
 describe('GameWorld', () => {
+    let eventBus: EventBus;
     let gameWorld: GameWorld;
     // let ctx!: any; // It CanvasRenderingContext2D mock
 
     beforeEach(() => {
         jest.resetAllMocks();
 
-        gameWorld = new GameWorld();
+        const canvas = createCanvas(200, 100) as unknown as HTMLCanvasElement;
+
+        eventBus = EventBus<State>({
+            state: 'mainMenu',
+            canvas,
+            context: canvas.getContext('2d')!,
+            previousUpdateTime: performance.now(),
+        });
+
+        gameWorld = new GameWorld(eventBus);
     });
 
     test('initialization', () => {
@@ -30,7 +42,7 @@ describe('GameWorld', () => {
             }),
         };
 
-        gameWorld.placeObject(object as GameObject);
+        gameWorld.placeObject(object as unknown as GameObject);
 
         expect(gameWorld.objects.length).toBe(2); // Player + placed object
         expect(gameWorld.objects[0]).toBe(object); // Placed object is at index 0
