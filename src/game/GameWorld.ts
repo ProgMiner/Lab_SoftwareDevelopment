@@ -206,16 +206,17 @@ export class GameWorld implements Drawable {
     givePlayerXp(xp: number) {
         this.player.xp += xp;
 
-        const nextLevelCost = this.player.nextLevelCost;
+        let nextLevelCost = this.player.nextLevelCost;
         if (this.player.xp >= nextLevelCost) {
-            this.player.xp -= nextLevelCost;
-
             const oldStats = {
                 damage: this.player.actualDamage,
                 armor: this.player.actualArmor,
             }
 
-            ++this.player.level;
+            for (; this.player.xp >= nextLevelCost; nextLevelCost = this.player.nextLevelCost) {
+                this.player.xp -= nextLevelCost;
+                ++this.player.level;
+            }
 
             this.eventBus({
                 type: 'levelUp',
