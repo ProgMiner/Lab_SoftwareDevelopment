@@ -98,7 +98,7 @@ class CatCommandTest {
     @Test
     fun `test non accessible file`() {
         val file = Files.createTempFile("testCat", ".txt")
-        Files.setPosixFilePermissions(file, setOf())
+        file.toFile().setReadable(false)
 
         val cmd = CatCommand(listOf("cat", file.fileName.toString()))
 
