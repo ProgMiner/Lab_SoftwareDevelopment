@@ -12,6 +12,8 @@ const HEALTH_BAR_OFFSET_FACTOR = 0.4; // px
 const HEALTH_BAR_WIDTH_FACTOR = 0.8; // px
 const HEALTH_BAR_HEIGHT_FACTOR = 0.1; // px
 
+const CONFUSION_STEPS = 1;
+
 /**
  * Abstract mob
  *
@@ -53,11 +55,10 @@ export abstract class AbstractMob extends SimpleBehaviourMovable implements Mob 
     onStep(world: GameWorld): void {
         const { player } = world;
 
-        const damage = GameWorld.calcDamage(player.actualDamage, this.armor);
+        this.hit(GameWorld.calcDamage(player.actualDamage, this.armor), world);
 
-        this.hit(damage, world);
         // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
-        TemporalBehaviourModel.decorate(this, damage, new ConfusedBehaviourModel());
+        TemporalBehaviourModel.decorate(this, CONFUSION_STEPS, new ConfusedBehaviourModel());
 
         world.hitPlayer(this.damage);
     }

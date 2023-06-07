@@ -1,6 +1,7 @@
 import random from 'random';
 
 import { AggressiveBehaviourModel } from '../../behaviour/AggressiveBehaviourModel';
+import { CleverBehaviourModel } from '../../behaviour/CleverBehaviourModel';
 import { loadTexture } from '../../../utils/drawTexture';
 import { Coordinates } from '../../../utils/Coordinates';
 import { shuffleInplace } from '../../../utils/shuffle';
@@ -20,7 +21,7 @@ loadTexture(wizard);
  */
 export class Wizard extends AbstractMob implements Cloneable {
 
-    actualBehaviourModel = new AggressiveBehaviourModel();
+    actualBehaviourModel = new CleverBehaviourModel(new AggressiveBehaviourModel());
 
     health: number = 10;
     readonly maxHealth: number = 10;
