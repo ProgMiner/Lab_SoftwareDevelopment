@@ -1,7 +1,5 @@
-import random from 'random'
-
 import { PassiveBehaviourModel } from './PassiveBehaviourModel';
-import { shuffleInplace } from '../../utils/shuffle';
+import { ChaoticBehaviourModel } from './ChaoticBehaviourModel';
 import { BehaviourModel } from './BehaviourModel';
 import { GameWorld } from '../GameWorld';
 import { Movable } from '../Movable';
@@ -12,7 +10,7 @@ import { Movable } from '../Movable';
  *
  * Random move if in wall
  */
-export class AvoidWallsBehaviourModel<Self extends Movable> implements BehaviourModel<Self> {
+export class AvoidWallsBehaviourModel<Self extends Movable> extends ChaoticBehaviourModel<Self> {
 
     /**
      * Behaviour model that used when object is not in wall
@@ -23,21 +21,18 @@ export class AvoidWallsBehaviourModel<Self extends Movable> implements Behaviour
      * @param noWallsBehaviour behaviour model that used when object is not in wall
      */
     constructor(noWallsBehaviour: BehaviourModel<Self> = new PassiveBehaviourModel()) {
+        super();
+
         this.noWallsBehaviour = noWallsBehaviour;
     }
 
     onMove(self: Self, world: GameWorld): void {
         if (world.checkCollisionWithObjects(self.coordinates).length === 0) {
-            return this.noWallsBehaviour.onMove(self, world);
+            this.noWallsBehaviour.onMove(self, world);
+            return;
         }
 
-        const positions = shuffleInplace(self.coordinates.adjacent(), random);
-
-        for (const position of positions) {
-            if (self.moveTo(position, world)) {
-                return;
-            }
-        }
+        super.onMove(self, world);
     }
 
     clone(): AvoidWallsBehaviourModel<Self> {

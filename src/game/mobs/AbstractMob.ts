@@ -1,6 +1,6 @@
 import { SimpleBehaviourMovable } from '../behaviour/SimpleBehaviourMovable';
 import { TemporalBehaviourModel } from '../behaviour/TemporalBehaviourModel';
-import { ConfusedBehaviourModel } from '../behaviour/ConfusedBehaviourModel';
+import { ChaoticBehaviourModel } from '../behaviour/ChaoticBehaviourModel';
 import { drawBar, HEALTH_BAR_COLOR } from '../../utils/drawBar';
 import { Coordinates } from '../../utils/Coordinates';
 import { GameWorld } from '../GameWorld';
@@ -58,7 +58,7 @@ export abstract class AbstractMob extends SimpleBehaviourMovable implements Mob 
         this.hit(GameWorld.calcDamage(player.actualDamage, this.armor), world);
 
         // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
-        TemporalBehaviourModel.decorate(this, CONFUSION_STEPS, new ConfusedBehaviourModel());
+        TemporalBehaviourModel.decorate(this, CONFUSION_STEPS, new ChaoticBehaviourModel());
 
         world.hitPlayer(this.damage);
     }

@@ -7,11 +7,11 @@ import { Movable } from '../Movable';
 
 
 /**
- * Confused behaviour model
+ * Chaotic behaviour model
  *
  * Moves randomly
  */
-export class ConfusedBehaviourModel<Self extends Movable> implements BehaviourModel<Self> {
+export class ChaoticBehaviourModel<Self extends Movable> implements BehaviourModel<Self> {
 
     onMove(self: Self, world: GameWorld): void {
         const positions = shuffleInplace(self.coordinates.adjacent(), random);
@@ -23,7 +23,7 @@ export class ConfusedBehaviourModel<Self extends Movable> implements BehaviourMo
         }
     }
 
-    clone(): ConfusedBehaviourModel<Self> {
-        return new ConfusedBehaviourModel();
+    clone(): ChaoticBehaviourModel<Self> {
+        return new ChaoticBehaviourModel();
     }
 }
