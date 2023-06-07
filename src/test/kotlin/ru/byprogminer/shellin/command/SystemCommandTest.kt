@@ -101,7 +101,7 @@ hello world
     fun `test on Windows 🤡`() {
         assumeTrue(System.getProperty("os.name").contains("win", true))
 
-        val cmd = SystemCommand(listOf("echo", "test hello world"))
+        val cmd = SystemCommand(listOf("dir"))
 
         testCommand {
             cmd.exec()
