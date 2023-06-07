@@ -27,6 +27,10 @@ class GrepCommand(
     private lateinit var args: GrepArgs
     private lateinit var regex: Regex
 
+    init {
+        require(argsList.isNotEmpty())
+    }
+
     override fun exec(input: BufferedInputStream, output: PrintStream, error: PrintStream, state: State) {
         args = try {
             ArgParser(argsList.subList(1, argsList.size).toTypedArray()).parseInto(::GrepArgs)
