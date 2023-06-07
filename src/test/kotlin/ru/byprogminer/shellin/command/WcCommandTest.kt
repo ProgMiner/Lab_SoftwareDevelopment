@@ -47,12 +47,12 @@ class WcCommandTest {
         val file = Files.createTempFile("testCat", ".txt")
 
         file.bufferedWriter().use {
-            it.write("""\
+            it.write("""
 test
 русский текст
 
 lol 12312
-""")
+""".trim())
         }
 
         val cmd = WcCommand(listOf("wc", file.toAbsolutePath().toString()))
@@ -62,7 +62,7 @@ lol 12312
         testCommand {
             cmd.exec()
 
-            assertEquals("5\t6\t44\t${file.toAbsolutePath()}", output)
+            assertEquals("3\t4\t41\t${file.toAbsolutePath()}", output)
             assertTrue(error.isEmpty())
         }
     }
@@ -72,12 +72,12 @@ lol 12312
         val file = Files.createTempFile("testCat", ".txt")
 
         file.bufferedWriter().use {
-            it.write("""\
+            it.write("""
 test
 русский текст
 
 lol 12312
-""")
+""".trim())
         }
 
         val cmd = WcCommand(listOf("wc", file.fileName.toString()))
@@ -87,7 +87,7 @@ lol 12312
         testCommand {
             cmd.exec()
 
-            assertEquals("5\t6\t44\t${file.fileName}", output)
+            assertEquals("3\t4\t41\t${file.fileName}", output)
             assertTrue(error.isEmpty())
         }
     }
