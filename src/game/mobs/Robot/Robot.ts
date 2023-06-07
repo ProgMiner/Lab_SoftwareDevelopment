@@ -1,4 +1,4 @@
-import { AggressiveBehaviourModel } from '../../behaviour/AggressiveBehaviourModel';
+import { EnhancedAggressiveBehaviourModel } from '../../behaviour/EnhancedAggressiveBehaviourModel';
 import { CleverBehaviourModel } from '../../behaviour/CleverBehaviourModel';
 import { Coordinates } from '../../../utils/Coordinates';
 import { loadTexture } from '../../../utils/drawTexture';
@@ -16,7 +16,7 @@ loadTexture(robot);
  */
 export class Robot extends AbstractMob {
 
-    actualBehaviourModel = new CleverBehaviourModel(new AggressiveBehaviourModel());
+    actualBehaviourModel = new CleverBehaviourModel(new EnhancedAggressiveBehaviourModel());
 
     health: number = 10;
     readonly maxHealth: number = 10;
