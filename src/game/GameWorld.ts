@@ -94,6 +94,17 @@ export class GameWorld implements Drawable {
     }
 
     /**
+     * Check is object in world
+     *
+     * @param object object to check
+     *
+     * @return is object in world
+     */
+    isObjectInWorld(object: GameObject): boolean {
+        return this.objects.includes(object);
+    }
+
+    /**
      * Move player by specified vector
      *
      * Checks can player step on result cell and runs triggers

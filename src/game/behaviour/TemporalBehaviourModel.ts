@@ -40,6 +40,10 @@ export class TemporalBehaviourModel<Self extends SimpleBehaviourMovable> impleme
         --this.moves;
     }
 
+    clone(): TemporalBehaviourModel<Self> {
+        return new TemporalBehaviourModel(this.moves, this.behaviour, this.oldBehaviour);
+    }
+
     /**
      * Helper function that decorates behaviour model of object
      *

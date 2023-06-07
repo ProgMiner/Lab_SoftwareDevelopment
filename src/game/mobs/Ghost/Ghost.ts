@@ -24,8 +24,8 @@ export class Ghost extends AbstractMob {
     health: number = 3;
     readonly maxHealth: number = 3;
 
-    readonly armor: number = 0;
     readonly damage: number = 1;
+    readonly armor: number = 0;
 
     readonly experience: number = 10;
 

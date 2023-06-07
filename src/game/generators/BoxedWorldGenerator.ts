@@ -187,7 +187,6 @@ export class BoxedWorldGenerator extends AbstractGenerator<GameWorld> implements
         remaining.add(0);
 
         const doorsNumberGenerator = random.uniformInt(0, 4);
-        console.log(doorsNumberGenerator());
 
         let counter = 1;
         while (queue.length > 0) {

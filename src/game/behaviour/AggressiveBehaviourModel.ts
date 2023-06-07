@@ -45,6 +45,10 @@ export class AggressiveBehaviourModel<Self extends Movable> implements Behaviour
         }
     }
 
+    clone(): AggressiveBehaviourModel<Self> {
+        return new AggressiveBehaviourModel(this.noPlayerBehaviour);
+    }
+
     private static findNearestCellToPlayer(baseCell: Coordinates, playerCell: Coordinates): Coordinates[] {
         const candidates: [Coordinates, number][] = baseCell.adjacent()
             .map(c => [c, c.vectorTo(playerCell).length()]);

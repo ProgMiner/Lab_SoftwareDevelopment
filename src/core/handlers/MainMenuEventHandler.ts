@@ -1,7 +1,7 @@
 import { EventBus, EventHandler } from '../events/EventBus';
 import { State } from '../../states/State';
 import { GameWorld } from '../../game/GameWorld';
-import { Coordinates } from '../../utils/Coordinates';
+import { Coordinates, MutableCoordinates } from '../../utils/Coordinates';
 import { Wall } from '../../game/Wall/Wall';
 import { DroppedItem } from '../../game/DroppedItem';
 import { Sword } from '../../game/items/Sword/Sword';
@@ -72,7 +72,7 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event, eventBus
             darknessRadius: 130,
             scale: new Coordinates(100, 100),
             updateDistance: 10,
-            cameraOffset: Coordinates.ZERO,
+            cameraOffset: new MutableCoordinates(0, 0),
         };
 
         // TODO load screen
@@ -145,7 +145,7 @@ const makeGame2 = async (eventBus: EventBus) => {
     ]);
 
     const mobGenerator = new UniformMobGenerator([
-        [new MagicalMobGenerator(itemGenerator, { Mimic: 3, Ghost: 2 }), 5],
+        [new MagicalMobGenerator(itemGenerator, { Mimic: 3, Ghost: 2, Wizard: 2 }), 7],
         [new TechnoMobGenerator({ Robot: 2 }), 2],
     ]);
 

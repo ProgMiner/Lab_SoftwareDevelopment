@@ -8,6 +8,8 @@ type MobTypes = 'Robot';
 
 /**
  * Mob generator that generates Robots
+ *
+ * @see Robot
  */
 export class TechnoMobGenerator extends UniformMobGenerator {
 
