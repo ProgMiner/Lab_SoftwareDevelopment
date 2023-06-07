@@ -34,10 +34,10 @@ class WcCommandTest {
     fun `test no args`() {
         val cmd = WcCommand(listOf("wc"))
 
-        testCommand {
+        testCommand("test\n") {
             cmd.exec()
 
-            assertEquals("Usage: wc <FILE>", output)
+            assertEquals("1\t1\t5\t-", output)
             assertTrue(error.isEmpty())
         }
     }

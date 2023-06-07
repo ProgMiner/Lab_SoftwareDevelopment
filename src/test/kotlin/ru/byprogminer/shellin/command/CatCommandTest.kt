@@ -34,10 +34,10 @@ class CatCommandTest {
     fun `test no args`() {
         val cmd = CatCommand(listOf("cat"))
 
-        testCommand {
+        testCommand("test") {
             cmd.exec()
 
-            assertEquals("Usage: cat <FILE>", output)
+            assertEquals("test", output)
             assertTrue(error.isEmpty())
         }
     }

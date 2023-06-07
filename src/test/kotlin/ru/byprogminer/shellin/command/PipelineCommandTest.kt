@@ -1,7 +1,6 @@
 package ru.byprogminer.shellin.command
 
 import io.mockk.mockk
-import org.junit.jupiter.api.Assumptions.assumeFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -70,20 +69,18 @@ class PipelineCommandTest {
 
     @Test
     fun `test complex`() {
-        assumeFalse(listOf("mac", "darwin", "win").any { System.getProperty("os.name").contains(it, true) })
-
-        state = State(System.getenv().toMutableMap())
+        state = State(mutableMapOf())
 
         val cmd = PipelineCommand(listOf(
             EchoCommand(listOf("echo", "test")),
-            SystemCommand(listOf("grep", "-F", "es")),
-            SystemCommand(listOf("cat")),
+            CatCommand(listOf("cat")),
+            WcCommand(listOf("wc")),
         ))
 
         testCommand {
             cmd.exec()
 
-            assertEquals("test", output)
+            assertEquals("1\t1\t5\t-", output)
             assertTrue(error.isEmpty())
         }
     }
