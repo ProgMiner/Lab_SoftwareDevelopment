@@ -21,6 +21,7 @@ export abstract class AbstractMob extends SimpleBehaviourMovable implements Mob 
 
     abstract health: number;
     readonly abstract maxHealth: number;
+    readonly abstract regenerationSpeed: number;
 
     readonly abstract damage: number;
     readonly abstract armor: number;
@@ -38,6 +39,14 @@ export abstract class AbstractMob extends SimpleBehaviourMovable implements Mob 
                 new Coordinates(scale.x * HEALTH_BAR_WIDTH_FACTOR, scale.y * HEALTH_BAR_HEIGHT_FACTOR),
                 HEALTH_BAR_COLOR,
             );
+        }
+    }
+
+    onMove(world: GameWorld) {
+        super.onMove(world);
+
+        if (world.isObjectInWorld(this)) {
+            this.health = Math.min(this.health + this.regenerationSpeed, this.maxHealth);
         }
     }
 

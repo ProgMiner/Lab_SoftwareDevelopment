@@ -19,6 +19,7 @@ export class Robot extends AbstractMob {
 
     health: number = 10;
     readonly maxHealth: number = 10;
+    readonly regenerationSpeed: number = 2;
 
     readonly damage: number = 5;
     readonly armor: number = 2;

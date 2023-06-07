@@ -24,6 +24,7 @@ export class Wizard extends AbstractMob implements Cloneable {
 
     health: number = 10;
     readonly maxHealth: number = 10;
+    readonly regenerationSpeed: number = 1;
 
     readonly damage: number = 3;
     readonly armor: number = 1;
