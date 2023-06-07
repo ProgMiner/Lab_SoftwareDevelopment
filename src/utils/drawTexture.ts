@@ -51,6 +51,7 @@ export const drawTexture = (
     place: Coordinates,
     scale: Coordinates,
 ) => {
+    // noinspection JSIncompatibleTypesComparison: WebStorm shows as warning, but TypeScript accepts
     if (texture === NO_TEXTURE) {
         return;
     }

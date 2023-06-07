@@ -16,6 +16,7 @@ loadTexture(robot);
  */
 export class Robot extends AbstractMob {
 
+    // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
     actualBehaviourModel = new CleverBehaviourModel(new EnhancedAggressiveBehaviourModel());
 
     health: number = 10;

@@ -41,6 +41,7 @@ export class Mimic extends AbstractMob {
     }
 
     constructor(item: Item, coordinates: Coordinates) {
+        // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
         super(coordinates, NO_TEXTURE);
 
         this._item = item;

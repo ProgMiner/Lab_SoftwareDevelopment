@@ -21,6 +21,7 @@ loadTexture(wizard);
  */
 export class Wizard extends AbstractMob implements Cloneable {
 
+    // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
     actualBehaviourModel = new CleverBehaviourModel(new AggressiveBehaviourModel());
 
     health: number = 10;
