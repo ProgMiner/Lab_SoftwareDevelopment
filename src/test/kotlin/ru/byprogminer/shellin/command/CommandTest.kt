@@ -21,8 +21,8 @@ class CommandTest(
     private val _output = ByteArrayOutputStream()
     private val _error = ByteArrayOutputStream()
 
-    val output get() = _output.toByteArray().toString(charset).trimEnd('\n')
-    val error get() = _error.toByteArray().toString(charset).trimEnd('\n')
+    val output get() = _output.toByteArray().toString(charset).trimEnd('\n', '\r')
+    val error get() = _error.toByteArray().toString(charset).trimEnd('\n', '\r')
 
     init {
         this.input = BufferedInputStream(ByteArrayInputStream(input.toByteArray(charset)))

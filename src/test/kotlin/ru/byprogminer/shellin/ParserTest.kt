@@ -273,6 +273,6 @@ class ParserTest {
 
         assertTrue(error.toByteArray().isEmpty())
 
-        return output.toByteArray().toString(charset).trimEnd('\n')
+        return output.toByteArray().toString(charset).trimEnd('\n', '\r')
     }
 }
