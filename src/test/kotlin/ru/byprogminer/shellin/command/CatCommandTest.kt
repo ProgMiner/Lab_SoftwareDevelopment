@@ -98,7 +98,7 @@ class CatCommandTest {
 
     @Test
     fun `test non accessible file`() {
-        assumeFalse(System.getProperty("os.name").contains("windows", true))
+        assumeFalse(System.getProperty("os.name").contains("win", true))
 
         val file = Files.createTempFile("testCat", ".txt")
         Files.setPosixFilePermissions(file, setOf())
