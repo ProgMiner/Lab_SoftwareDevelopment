@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import ru.byprogminer.shellin.State
+import java.nio.file.Paths
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -23,6 +24,34 @@ class SystemCommandTest {
     fun `test empty commands`() {
         assertThrows<IllegalArgumentException> {
             SystemCommand(emptyList())
+        }
+    }
+
+    @Test
+    fun `test bad command`() {
+        state.environment[State.PATH_VARIABLE] = ""
+
+        val cmd = SystemCommand(listOf("non existing command", "test hello world"))
+
+        val exception = assertThrows<IllegalArgumentException> {
+            testCommand {
+                cmd.exec()
+            }
+        }
+
+        assertEquals("No such executable in PATH: \"non existing command\"", exception.message)
+    }
+
+    @Test
+    fun `test bad local command`() {
+        state.pwd = Paths.get("")
+
+        val cmd = SystemCommand(listOf("./local", "test hello world"))
+
+        assertThrows<Exception> {
+            testCommand {
+                cmd.exec()
+            }
         }
     }
 
@@ -101,7 +130,7 @@ hello world
     fun `test on Windows 🤡`() {
         assumeTrue(System.getProperty("os.name").contains("win", true))
 
-        val cmd = SystemCommand(listOf("dir"))
+        val cmd = SystemCommand(listOf("dir.exe"))
 
         testCommand {
             cmd.exec()
