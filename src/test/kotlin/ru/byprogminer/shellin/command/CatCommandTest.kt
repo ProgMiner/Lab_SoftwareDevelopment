@@ -2,6 +2,7 @@ package ru.byprogminer.shellin.command
 
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.Assumptions.assumeFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -97,10 +98,10 @@ class CatCommandTest {
 
     @Test
     fun `test non accessible file`() {
+        assumeFalse(System.getProperty("os.name").contains("windows", true))
+
         val file = Files.createTempFile("testCat", ".txt")
-        file.toFile().setReadable(false)
-        file.toFile().setWritable(false)
-        file.toFile().setExecutable(false)
+        Files.setPosixFilePermissions(file, setOf())
 
         val cmd = CatCommand(listOf("cat", file.fileName.toString()))
 
