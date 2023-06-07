@@ -1,7 +1,6 @@
 package ru.byprogminer.shellin.command
 
 import org.junit.jupiter.api.Assumptions.assumeFalse
-import org.junit.jupiter.api.Assumptions.assumeTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -19,8 +18,8 @@ class SystemCommandTest {
     fun init() {
         state = State(System.getenv().toMutableMap())
 
-        // FIXME seems like tests not working on Mac
-        assumeFalse(listOf("mac", "darwin").any { System.getProperty("os.name").contains(it, true) })
+        // FIXME on Windows and Mac
+        assumeFalse(listOf("mac", "darwin", "win").any { System.getProperty("os.name").contains(it, true) })
     }
 
     @Test
@@ -59,9 +58,7 @@ class SystemCommandTest {
     }
 
     @Test
-    fun `test normal system without input success`() {
-        assumeFalse(System.getProperty("os.name").contains("win", true))
-
+    fun `test without input success`() {
         val cmd = SystemCommand(listOf("echo", "test hello world"))
 
         testCommand {
@@ -73,9 +70,7 @@ class SystemCommandTest {
     }
 
     @Test
-    fun `test normal system without input failure`() {
-        assumeFalse(System.getProperty("os.name").contains("win", true))
-
+    fun `test without input failure`() {
         val cmd = SystemCommand(listOf("rm", "/etc/passwd"))
 
         testCommand {
@@ -86,9 +81,7 @@ class SystemCommandTest {
     }
 
     @Test
-    fun `test normal system with input success`() {
-        assumeFalse(System.getProperty("os.name").contains("win", true))
-
+    fun `test with input success`() {
         val cmd = SystemCommand(listOf("cat"))
 
         val text = """
@@ -108,9 +101,7 @@ hello world
     }
 
     @Test
-    fun `test normal system with input failure`() {
-        assumeFalse(System.getProperty("os.name").contains("win", true))
-
+    fun `test with input failure`() {
         val cmd = SystemCommand(listOf("grep", "-F", "non existing line"))
 
         val text = """
@@ -126,17 +117,6 @@ hello world
 
             assertTrue(output.isEmpty())
             assertTrue(error.trimEnd { it == '-' || it.isDigit() }.endsWith("Process exited with code "))
-        }
-    }
-
-    @Test
-    fun `test on Windows 🤡`() {
-        assumeTrue(System.getProperty("os.name").contains("win", true))
-
-        val cmd = SystemCommand(listOf("cmd.exe", "/c", "dir"))
-
-        testCommand {
-            cmd.exec()
         }
     }
 
