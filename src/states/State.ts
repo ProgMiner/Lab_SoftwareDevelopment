@@ -28,6 +28,11 @@ export interface BaseState<State extends string> {
      * @see performance.now
      */
     previousUpdateTime: number;
+
+    /**
+     * Is in debug mode
+     */
+    debug: boolean;
 }
 
 /**
