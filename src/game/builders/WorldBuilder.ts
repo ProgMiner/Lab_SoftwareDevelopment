@@ -9,7 +9,17 @@ import { FileWorldBuilder } from './FileWorldBuilder';
  */
 export interface WorldBuilder {
 
+    /**
+     * Build world from file
+     *
+     * @return file world builder
+     */
     fromFile(): FileWorldBuilder;
 
+    /**
+     * Build world randomly
+     *
+     * @return random world builder
+     */
     random(): RandomWorldBuilder;
 }

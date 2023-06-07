@@ -44,6 +44,9 @@ export class GameWorld implements Drawable {
 
     private readonly _eventBus: EventBus;
 
+    /**
+     * Current event bus
+     */
     get eventBus(): EventBus {
         return this._eventBus;
     }
@@ -52,8 +55,9 @@ export class GameWorld implements Drawable {
      * @param eventBus current event bus
      */
     constructor(eventBus: EventBus) {
-        this.objects.push(this.player);
         this._eventBus = eventBus;
+
+        this.objects.push(this.player);
     }
 
     /**

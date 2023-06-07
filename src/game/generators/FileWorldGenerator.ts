@@ -184,6 +184,8 @@ export class FileWorldGenerator extends AbstractGenerator<GameWorld> implements 
      *
      * @param file imported world
      * @param eventBus current event bus
+     *
+     * @return promise of generator
      */
     public static async loadFile(file: string, eventBus: EventBus): Promise<FileWorldGenerator> {
         const response = await fetch(file);
