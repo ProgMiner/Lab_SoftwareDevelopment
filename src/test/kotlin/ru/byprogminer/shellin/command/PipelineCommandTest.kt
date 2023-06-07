@@ -80,7 +80,12 @@ class PipelineCommandTest {
         testCommand {
             cmd.exec()
 
-            assertEquals("1\t1\t5\t-", output)
+            if (System.getProperty("os.name").contains("win", true)) {
+                assertEquals("1\t1\t6\t-", output)
+            } else {
+                assertEquals("1\t1\t5\t-", output)
+            }
+
             assertTrue(error.isEmpty())
         }
     }
