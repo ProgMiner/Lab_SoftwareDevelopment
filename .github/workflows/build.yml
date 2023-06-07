@@ -2,7 +2,8 @@ name: build
 
 on:
   pull_request:
-    branches: [ lab1 ]
+    branches:
+      - 'lab1*'
 
   workflow_dispatch:
 
