@@ -99,6 +99,8 @@ class CatCommandTest {
     fun `test non accessible file`() {
         val file = Files.createTempFile("testCat", ".txt")
         file.toFile().setReadable(false)
+        file.toFile().setWritable(false)
+        file.toFile().setExecutable(false)
 
         val cmd = CatCommand(listOf("cat", file.fileName.toString()))
 
@@ -112,7 +114,7 @@ class CatCommandTest {
         }
     }
 
-    private fun testCommand(input: String = "", block: CommandTest.() -> Unit) {
+    private inline fun testCommand(input: String = "", block: CommandTest.() -> Unit) {
         CommandTest(state, input).block()
     }
 }
