@@ -9,6 +9,8 @@ const textures = new Map();
  * @param texture imported texture
  */
 export const loadTexture = (texture: string) => {
+    if (process.env.NODE_ENV == 'test')
+        return;
     const img = new Image();
     img.src = texture;
 

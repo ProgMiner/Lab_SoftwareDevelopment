@@ -4,8 +4,7 @@ import { EquipmentType } from '../Equipment';
 
 import texture from './sword.png';
 
-if (process.env.NODE_ENV !== 'test')
-    loadTexture(texture);
+loadTexture(texture);
 
 /**
  * Sword

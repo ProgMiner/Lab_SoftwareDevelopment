@@ -7,8 +7,7 @@ import texture from './golden_apple.png';
 
 const HEALING_FACTOR = 0.2;
 
-if (process.env.NODE_ENV !== 'test')
-    loadTexture(texture);
+loadTexture(texture);
 
 /**
  * Golden apple
