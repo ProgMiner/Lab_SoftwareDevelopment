@@ -7,10 +7,11 @@
     },
     "scripts": {
         "start": "webpack serve --mode=development -d eval-source-map",
-        "build": "webpack --mode=production",
-        "test": "jest",
+        "build": "shx mkdir -p ./build && shx cp -r ./public/* ./build && webpack --mode=production",
+        "clean": "shx rm -rf ./build",
+        "test": "jest --verbose",
         "predeploy": "yarn build",
-        "deploy": "gh-pages -d public"
+        "deploy": "gh-pages -d ./build"
     },
     "license": "MIT",
     "dependencies": {
@@ -24,6 +25,7 @@
         "jest": "^29.5.0",
         "jest-canvas-mock": "^2.5.1",
         "jsdom": "^22.1.0",
+        "shx": "^0.3.4",
         "style-loader": "^3.3.3",
         "ts-jest": "^29.1.0",
         "ts-loader": "^9.4.3",
