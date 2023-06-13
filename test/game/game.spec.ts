@@ -1,17 +1,18 @@
-import {setupJestCanvasMock} from 'jest-canvas-mock';
-import {GameWorld} from '../../src/game/GameWorld';
-import {Player} from '../../src/game/Player/Player';
-import {GameObject} from '../../src/game/GameObject';
-import {Coordinates} from '../../src/utils/Coordinates';
+import { GameWorld } from '../../src/game/GameWorld';
+import { Player } from '../../src/game/Player/Player';
+import { GameObject } from '../../src/game/GameObject';
+import { Coordinates } from '../../src/utils/Coordinates';
+import { EventBus } from '../../src/core/events/EventBus';
+import { State } from '../../src/states/State';
 
 describe('GameWorld', () => {
     let gameWorld: GameWorld;
-    let ctx: any; // It CanvasRenderingContext2D mock
+    // let ctx!: any; // It CanvasRenderingContext2D mock
 
     beforeEach(() => {
-        gameWorld = new GameWorld();
         jest.resetAllMocks();
-        setupJestCanvasMock();
+
+        gameWorld = new GameWorld();
     });
 
     test('initialization', () => {

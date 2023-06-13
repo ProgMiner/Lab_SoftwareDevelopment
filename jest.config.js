@@ -5,7 +5,6 @@ module.exports = {
     testEnvironment: 'node',
     setupFiles: [
         '<rootDir>/test/mocks/domMock.js',
-        'jest-canvas-mock',
     ],
     moduleNameMapper: {
         '\\.(png|svg|world|css)$': '<rootDir>/test/mocks/fileMock.js',
