@@ -16,7 +16,7 @@ export interface GameState extends BaseState<'game'> {
     world: GameWorld;
 
     /**
-     * Radius of darkness around camera
+     * Radius of darkness around camera, px
      */
     darknessRadius: number;
 
