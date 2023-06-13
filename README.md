@@ -385,7 +385,68 @@ HoleFillerName = "Player" | "Item".
 
 ### Алгоритмы
 
-... алгоритм генерации мира ...
+#### BoxedWorldGenerator
+
+Алгоритм состоит из двух основных этапов: генерация модели данных и формирование мира.
+
+Псевдокод работы первого этапа:
+
+```python
+def generateBoxes(random, maxDepth, maxItemsInRoom, itemGenerator):
+    result := Map() # отображение из координат комнаты в комнату
+
+    queue := Queue() # создаём пустую очередь
+    queue.push(((0, 0), 0)) # добавляем комнату на координатах (0, 0) на глубине обхода 0
+
+    while queue ≠ ø:
+        box, depth := queue.pop() # извлекаем очередную комнату из очереди
+
+        # генерируем целое число из отрезка [0, maxItemsInRoom]
+        itemsNumber := random.nextInt(0, maxItemsInRoom)
+
+        # генерируем itemsNumber случайных предметов
+        items := { itemGenerator.generate(random) | i <- [0, itemsNumber) }
+
+        # если ещё можем углубляться
+        if depth < maxDepth:
+
+            # случайное число проходов от 0 до 4 включительно
+            doorsNumber := random.nextInt(0, 4)
+
+            # выбираем в какую сторону будут проходы
+            doors := random.sample(doorsNumber, {
+                (box.x, box.y - 1),
+                (box.x, box.y + 1),
+                (box.x - 1, box.y),
+                (box.x + 1, box.y),
+            })
+
+            for door in doors:
+                resultDoors.add(door)
+
+                # если конечная точка прохода уже создана или запланирована - пропускаем
+                if door in result or door in queue:
+                    continue
+
+                # иначе - добавляем её в очередь на создание
+                queue.push((door, depth + 1))
+
+        else:
+            # пустое множество проходов
+            doors := {}
+
+        # сохраняем в результат
+        result[box] := (box, items, doors)
+
+    return result
+```
+
+Второй этап работы тривиально описывается словами:
+
+- Создаём стены для всех комнат
+- Создаём отверстия в стенах для проходов
+- Размещаем предметы в комнатах
+- Размещаем игрока в центре комнаты с координатами $`(0, 0)`$
 
 ### Ресурсы
 
