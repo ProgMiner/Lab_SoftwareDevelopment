@@ -38,9 +38,13 @@ if (canvas instanceof HTMLCanvasElement) {
     window.onload = (event) => {
         eventBus({ type: 'load', event });
 
-        setInterval(() => {
+        const fireTick = () => {
             eventBus({ type: 'tick' });
-        }, 1000 / 60);
+
+            setTimeout(fireTick, 1000 / 60);
+        };
+
+        fireTick();
     };
 
     window.onresize = (event) => {
