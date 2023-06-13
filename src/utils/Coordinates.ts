@@ -48,7 +48,7 @@ export class Coordinates {
      * @return `true` if equals, `false` otherwise
      */
     equals(that: Coordinates): boolean {
-        return this.x === that.x && this.y == that.y;
+        return this.x === that.x && this.y === that.y;
     }
 
     /**
