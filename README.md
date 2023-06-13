@@ -450,4 +450,4 @@ def generateBoxes(random, maxDepth, maxItemsInRoom, itemGenerator):
 
 ### Ресурсы
 
-... шрифты из Google Fonts ...
+В игре допустимо использование шрифтов из открытых CDN, таких как Google Fonts.
