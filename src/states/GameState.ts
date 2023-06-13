@@ -41,7 +41,7 @@ export interface BaseGameState<State extends GameStateState> extends BaseState<S
     scale: Coordinates;
 
     /**
-     * Maximum distance from object to player where object will be updated
+     * Maximum distance from object to player where object will be updated, in game world cells
      */
     updateDistance: number;
 
