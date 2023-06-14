@@ -18,7 +18,7 @@ import { Wall } from '../Wall/Wall';
  *   - `W` -- wall
  *   - `.` -- empty
  *   - integer number -- "hole"
- * - several lines, started with integer number and dot (`.`), "hole filler"
+ * - several lines, started with unique integer number and dot (`.`), "hole filler"
  *   after dot (maybe after some spaces) must be filler name, and after data for filler
  *
  * Syntax of hole fillers: `<index>. <name> [data]\n`
