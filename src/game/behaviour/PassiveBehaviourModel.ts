@@ -12,4 +12,8 @@ export class PassiveBehaviourModel<Self extends Movable> implements BehaviourMod
     onMove(): void {
         // do nothing
     }
+
+    clone(): PassiveBehaviourModel<Self> {
+        return new PassiveBehaviourModel();
+    }
 }

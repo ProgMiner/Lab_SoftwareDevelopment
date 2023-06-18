@@ -44,6 +44,9 @@ export class GameWorld implements Drawable {
 
     private readonly _eventBus: EventBus;
 
+    /**
+     * Current event bus
+     */
     get eventBus(): EventBus {
         return this._eventBus;
     }
@@ -52,8 +55,9 @@ export class GameWorld implements Drawable {
      * @param eventBus current event bus
      */
     constructor(eventBus: EventBus) {
-        this.objects.push(this.player);
         this._eventBus = eventBus;
+
+        this.objects.push(this.player);
     }
 
     /**
@@ -91,6 +95,17 @@ export class GameWorld implements Drawable {
 
         this.objects.splice(idx, 1);
         return true;
+    }
+
+    /**
+     * Check is object in world
+     *
+     * @param object object to check
+     *
+     * @return is object in world
+     */
+    isObjectInWorld(object: GameObject): boolean {
+        return this.objects.includes(object);
     }
 
     /**
@@ -433,12 +448,14 @@ export class GameWorld implements Drawable {
     /**
      * Calculate damage
      *
+     * Guaranteed that result is non-negative
+     *
      * @param damage damage points of attacker
      * @param armor armor points of attacked
      *
      * @return result damage
      */
     static calcDamage(damage: number, armor: number): number {
-        return damage - armor;
+        return Math.max(0, damage - armor);
     }
 }

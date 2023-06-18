@@ -20,7 +20,7 @@ export class Player implements GameObject {
 
     readonly isPassable = true;
 
-    coordinates: Coordinates = new Coordinates(0, 0);
+    coordinates: Coordinates = Coordinates.ZERO;
 
     /**
      * Player's inventory

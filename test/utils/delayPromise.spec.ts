@@ -1,4 +1,5 @@
-import {delayPromise} from "../../src/utils/delayPromise";
+import { delayPromise } from '../../src/utils/delayPromise';
+
 
 describe('delayPromise', () => {
     jest.useFakeTimers();

@@ -1,5 +1,6 @@
 import { Coordinates } from '../../src/utils/Coordinates';
 
+
 describe('Coordinates', () => {
     test('length', () => {
         const coordinates = new Coordinates(3, 4);

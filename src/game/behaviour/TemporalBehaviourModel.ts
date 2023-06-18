@@ -11,7 +11,7 @@ import { GameWorld } from '../GameWorld';
  *
  * Usable as temporal decorator for mobs
  */
-export class TemporalBehaviourModel<Self extends SimpleBehaviourMovable<Self>> implements BehaviourModel<Self> {
+export class TemporalBehaviourModel<Self extends SimpleBehaviourMovable> implements BehaviourModel<Self> {
 
     private moves: number;
 
@@ -40,6 +40,10 @@ export class TemporalBehaviourModel<Self extends SimpleBehaviourMovable<Self>> i
         --this.moves;
     }
 
+    clone(): TemporalBehaviourModel<Self> {
+        return new TemporalBehaviourModel(this.moves, this.behaviour, this.oldBehaviour);
+    }
+
     /**
      * Helper function that decorates behaviour model of object
      *
@@ -47,7 +51,7 @@ export class TemporalBehaviourModel<Self extends SimpleBehaviourMovable<Self>> i
      * @param moves amount of moves on that behaviour model will be applied
      * @param behaviour behaviour model that will be applied
      */
-    static decorate<Self extends SimpleBehaviourMovable<Self>>(
+    static decorate<Self extends SimpleBehaviourMovable>(
         object: Self,
         moves: number,
         behaviour: BehaviourModel<Self>,

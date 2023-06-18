@@ -41,6 +41,10 @@ export class CowardlyBehaviourModel<Self extends Movable> implements BehaviourMo
         }
     }
 
+    clone(): CowardlyBehaviourModel<Self> {
+        return new CowardlyBehaviourModel(this.noPlayerBehaviour);
+    }
+
     private static findFarthestCellFromPlayer(baseCell: Coordinates, playerCell: Coordinates): Coordinates[] {
         const candidates: [Coordinates, number][] = baseCell.adjacent()
             .map(c => [c, c.vectorTo(playerCell).length()]);

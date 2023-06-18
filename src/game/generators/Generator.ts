@@ -2,6 +2,7 @@ import { Random } from 'random';
 
 import { GameWorld } from '../GameWorld';
 import { Item } from '../items/Item';
+import { Mob } from '../mobs/Mob';
 
 
 /**
@@ -18,8 +19,19 @@ export interface Generator<T> {
      * in order to not freeze browser UI
      *
      * @param {Random} random instance of random to control random seed
+     *
+     * @return promise of generated value
      */
     generate(random: Random): Promise<T>;
+
+    /**
+     * Maps generator with specified mapping function
+     *
+     * @param fn mapping function
+     *
+     * @return new generator
+     */
+    map<V>(fn: (value: T, random: Random) => V): Generator<V>;
 }
 
 /**
@@ -32,15 +44,7 @@ export type WorldGenerator = Generator<GameWorld>;
  */
 export type ItemGenerator = Generator<Item>;
 
-// noinspection JSValidateJSDoc
 /**
- * Generic generator of non-random values
- *
- * @template T type of generating values
- *
- * @param {() => T} value factory of generating values
+ * Generator of mobs
  */
-export const constGenerator = <T>(value: () => T): Generator<T> => ({
-
-    generate: async () => value(),
-});
+export type MobGenerator = Generator<Mob>;

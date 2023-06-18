@@ -4,7 +4,7 @@ import { ConfusedBehaviourModel } from '../behaviour/ConfusedBehaviourModel';
 import { drawBar, HEALTH_BAR_COLOR } from '../../utils/drawBar';
 import { Coordinates } from '../../utils/Coordinates';
 import { GameWorld } from '../GameWorld';
-import { Trigger } from '../Trigger';
+import { Mob } from './Mob';
 
 
 const HEALTH_BAR_OFFSET_FACTOR = 0.4; // px
@@ -17,33 +17,14 @@ const HEALTH_BAR_HEIGHT_FACTOR = 0.1; // px
  *
  * Mobs are behaviour movables that fights with player on step on
  */
-export abstract class AbstractMob<Self extends AbstractMob<Self>>
-    extends SimpleBehaviourMovable<Self> implements Trigger
-{
+export abstract class AbstractMob extends SimpleBehaviourMovable implements Mob {
 
-    /**
-     * Current mob health
-     */
     abstract health: number;
-
-    /**
-     * Maximum mob health
-     */
     readonly abstract maxHealth: number;
 
-    /**
-     * Mob damage
-     */
     readonly abstract damage: number;
-
-    /**
-     * Mob armor
-     */
     readonly abstract armor: number;
 
-    /**
-     * Amount of experience points that mob gives player for kill
-     */
     readonly abstract experience: number;
 
     draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates) {
@@ -66,7 +47,8 @@ export abstract class AbstractMob<Self extends AbstractMob<Self>>
         const damage = GameWorld.calcDamage(player.actualDamage, this.armor);
 
         this.hit(damage, world);
-        TemporalBehaviourModel.decorate(this.self, damage, new ConfusedBehaviourModel());
+        // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
+        TemporalBehaviourModel.decorate(this, damage, new ConfusedBehaviourModel());
 
         world.hitPlayer(this.damage);
     }

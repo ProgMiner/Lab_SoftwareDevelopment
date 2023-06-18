@@ -1,3 +1,4 @@
+import { Cloneable } from '../../core/Cloneable';
 import { GameWorld } from '../GameWorld';
 import { Movable } from '../Movable';
 
@@ -9,7 +10,7 @@ import { Movable } from '../Movable';
  *
  * @template Self type of movable object
  */
-export interface BehaviourModel<Self extends Movable> {
+export interface BehaviourModel<Self extends Movable> extends Cloneable {
 
     /**
      * Calls after player's move
@@ -18,4 +19,6 @@ export interface BehaviourModel<Self extends Movable> {
      * @param world current game world
      */
     onMove(self: Self, world: GameWorld): void;
+
+    clone(): BehaviourModel<Self>;
 }

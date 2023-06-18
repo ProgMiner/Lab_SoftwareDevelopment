@@ -7,14 +7,10 @@ import { GameWorld } from '../GameWorld';
 
 /**
  * Abstract movable, which moves controls by behaviour model
- *
- * @template Self type of this
  */
-export abstract class BehaviourMovable<Self extends BehaviourMovable<Self>> extends AbstractMovable {
+export abstract class BehaviourMovable extends AbstractMovable {
 
     coordinates: Coordinates;
-
-    protected abstract readonly self: Self;
 
     /**
      * @param coordinates initial coordinates
@@ -28,7 +24,8 @@ export abstract class BehaviourMovable<Self extends BehaviourMovable<Self>> exte
     }
 
     onMove(world: GameWorld): void {
-        this.behaviourModel(world).onMove(this.self, world);
+        // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
+        this.behaviourModel(world).onMove(this, world);
     }
 
     /**
@@ -38,5 +35,5 @@ export abstract class BehaviourMovable<Self extends BehaviourMovable<Self>> exte
      *
      * @param world current world object
      */
-    protected abstract behaviourModel(world: GameWorld): BehaviourModel<Self>;
+    protected abstract behaviourModel(world: GameWorld): BehaviourModel<this>;
 }

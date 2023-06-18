@@ -1,16 +1,17 @@
 import { EventBus, EventHandler } from '../events/EventBus';
 import { State } from '../../states/State';
 import { GameWorld } from '../../game/GameWorld';
-import { Coordinates } from '../../utils/Coordinates';
+import { Coordinates, MutableCoordinates } from '../../utils/Coordinates';
 import { Wall } from '../../game/Wall/Wall';
 import { DroppedItem } from '../../game/DroppedItem';
 import { Sword } from '../../game/items/Sword/Sword';
 import { GoldenApple } from '../../game/items/GoldenApple/GoldenApple';
-import { BoxedWorldGenerator } from '../../game/generators/BoxedWorldGenerator';
-import { constGenerator } from '../../game/generators/Generator';
-import { UniformItemGenerator } from '../../game/generators/UniformItemGenerator';
+import { GeneratorsWorldBuilder } from '../../game/builders/GeneratorsWorldBuilder';
+import { UniformItemGenerator, UniformMobGenerator } from '../../game/generators/UniformGenerator';
+import { MagicalMobGenerator } from '../../game/generators/MagicalMobGenerator';
+import { TechnoMobGenerator } from '../../game/generators/TechnoMobGenerator';
+import { constGenerator } from '../../game/generators/constGenerator';
 import { seededRandom } from '../../utils/seededRandom';
-import { FileWorldGenerator } from '../../game/generators/FileWorldGenerator';
 import { DEFAULT_FONT_FAMILY, drawText } from '../../utils/drawText';
 import { CommonGameState } from '../../states/CommonGameState';
 import { GameStateState } from '../../states/GameState';
@@ -71,7 +72,7 @@ export const MainMenuEventHandler: EventHandler<State> = (state, event, eventBus
             darknessRadius: 130,
             scale: new Coordinates(100, 100),
             updateDistance: 10,
-            cameraOffset: new Coordinates(0, 0),
+            cameraOffset: new MutableCoordinates(0, 0),
         };
 
         // TODO load screen
@@ -138,12 +139,27 @@ const makeGame1 = (eventBus: EventBus): GameWorld => {
 }
 
 const makeGame2 = async (eventBus: EventBus) => {
-    return new BoxedWorldGenerator(eventBus, 5, 2, new Coordinates(6, 5), new UniformItemGenerator([
-        [constGenerator(() => new Sword()), 1],
+    const itemGenerator = new UniformItemGenerator([
+        [constGenerator(() => new Sword()), 2],
         [constGenerator(() => new GoldenApple()), 1],
-    ])).generate(seededRandom('' + performance.now()));
+    ]);
+
+    const mobGenerator = new UniformMobGenerator([
+        [new MagicalMobGenerator(itemGenerator, { Mimic: 3, Ghost: 2, Wizard: 2 }), 7],
+        [new TechnoMobGenerator({ Robot: 2 }), 2],
+    ]);
+
+    return new GeneratorsWorldBuilder().random()
+        .eventBus(eventBus)
+        .randomInstance(seededRandom('' + performance.now()))
+        .maxDepth(5)
+        .maxItemsInRoom(3)
+        .maxMobsInRoom(2)
+        .boxSize(new Coordinates(6, 5))
+        .itemGenerator(itemGenerator)
+        .mobGenerator(mobGenerator)
+        .build();
 }
 
-const makeGame3 = async (eventBus: EventBus) => {
-    return (await FileWorldGenerator.loadFile(world, eventBus)).generate();
-};
+const makeGame3 = async (eventBus: EventBus) => new GeneratorsWorldBuilder().fromFile()
+    .eventBus(eventBus).filename(world).build();

@@ -6,6 +6,11 @@
 export class Coordinates {
 
     /**
+     * Zero coordinates for convenience
+     */
+    static readonly ZERO: Coordinates = new Coordinates(0, 0);
+
+    /**
      * X coordinate, or width
      */
     readonly x: number;

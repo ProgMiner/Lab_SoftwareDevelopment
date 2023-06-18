@@ -22,4 +22,8 @@ export class ConfusedBehaviourModel<Self extends Movable> implements BehaviourMo
             }
         }
     }
+
+    clone(): ConfusedBehaviourModel<Self> {
+        return new ConfusedBehaviourModel();
+    }
 }

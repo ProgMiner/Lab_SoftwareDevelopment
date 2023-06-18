@@ -13,7 +13,7 @@ export class Wall implements GameObject {
 
     readonly isPassable = false;
 
-    coordinates: Coordinates = new Coordinates(0, 0);
+    coordinates: Coordinates = Coordinates.ZERO;
 
     /**
      * Walls matrix, value is `true` if wall is on cell, `false` otherwise

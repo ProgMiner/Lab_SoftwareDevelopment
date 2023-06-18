@@ -39,4 +39,8 @@ export class AvoidWallsBehaviourModel<Self extends Movable> implements Behaviour
             }
         }
     }
+
+    clone(): AvoidWallsBehaviourModel<Self> {
+        return new AvoidWallsBehaviourModel(this.noWallsBehaviour);
+    }
 }
