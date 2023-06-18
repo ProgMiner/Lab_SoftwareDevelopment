@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import ru.byprogminer.shellin.State
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 
 class PipelineCommandTest {
@@ -31,11 +33,60 @@ class PipelineCommandTest {
     }
 
     @Test
-    fun `test run`() {
-        assertThrows<NotImplementedError> {
-            testCommand {
-                PipelineCommand(listOf(mockk(), mockk())).exec()
+    fun `test two commands`() {
+        state = State(mutableMapOf())
+
+        val cmd = PipelineCommand(listOf(
+            EchoCommand(listOf("echo", "test")),
+            EchoCommand(listOf("echo", "foo", "bar")),
+        ))
+
+        testCommand {
+            cmd.exec()
+
+            assertEquals("foo bar", output)
+            assertTrue(error.isEmpty())
+        }
+    }
+
+    @Test
+    fun `test more commands`() {
+        state = State(mutableMapOf())
+
+        val cmd = PipelineCommand(listOf(
+            EchoCommand(listOf("echo", "test")),
+            EchoCommand(listOf("echo", "foo", "bar")),
+            EchoCommand(listOf("echo", "kek", "lol")),
+        ))
+
+        testCommand {
+            cmd.exec()
+
+            assertEquals("kek lol", output)
+            assertTrue(error.isEmpty())
+        }
+    }
+
+    @Test
+    fun `test complex`() {
+        state = State(mutableMapOf())
+
+        val cmd = PipelineCommand(listOf(
+            EchoCommand(listOf("echo", "test")),
+            CatCommand(listOf("cat")),
+            WcCommand(listOf("wc")),
+        ))
+
+        testCommand {
+            cmd.exec()
+
+            if (System.getProperty("os.name").contains("win", true)) {
+                assertEquals("1\t1\t6\t-", output)
+            } else {
+                assertEquals("1\t1\t5\t-", output)
             }
+
+            assertTrue(error.isEmpty())
         }
     }
 

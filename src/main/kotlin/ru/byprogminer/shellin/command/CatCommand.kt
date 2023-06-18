@@ -21,23 +21,31 @@ class CatCommand(
     }
 
     override fun exec(input: BufferedInputStream, output: PrintStream, error: PrintStream, state: State) {
-        if (args.size != 2) {
-            output.println("Usage: ${args[0]} <FILE>")
+        if (args.size > 2) {
+            output.println("Usage: ${args[0]} [FILE]")
             return
         }
 
-        val path = state.pwd.resolve(args[1])
-
-        try {
-            Files.newInputStream(path).use {
-                it.copyTo(output)
+        if (args.size == 1) {
+            try {
+                input.copyTo(output)
+            } catch (e: IOException) {
+                error.println("Cannot read file: \"${e.localizedMessage}\".")
             }
-        } catch (e: NoSuchFileException) {
-            error.println("File not found: \"$path\".")
-        } catch (e: AccessDeniedException) {
-            error.println("Access denied: \"$path\".")
-        } catch (e: IOException) {
-            error.println("Cannot read file: \"${e.localizedMessage}\".")
+        } else {
+            val path = state.pwd.resolve(args[1])
+
+            try {
+                Files.newInputStream(path).use {
+                    it.copyTo(output)
+                }
+            } catch (e: NoSuchFileException) {
+                error.println("File not found: \"$path\".")
+            } catch (e: AccessDeniedException) {
+                error.println("Access denied: \"$path\".")
+            } catch (e: IOException) {
+                error.println("Cannot read file: \"${e.localizedMessage}\".")
+            }
         }
     }
 }
