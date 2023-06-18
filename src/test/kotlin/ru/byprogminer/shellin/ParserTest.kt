@@ -258,6 +258,7 @@ class ParserTest {
         assertIs<WcCommand>(parser.parse(createStream("wc\n")))
         assertIs<PwdCommand>(parser.parse(createStream("pwd\n")))
         assertIs<ExitCommand>(parser.parse(createStream("exit\n")))
+        assertIs<GrepCommand>(parser.parse(createStream("grep\n")))
     }
 
     private fun createStream(content: String) =
