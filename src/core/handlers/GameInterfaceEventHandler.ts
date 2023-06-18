@@ -68,6 +68,7 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
                     canvas,
                     context,
                     previousUpdateTime,
+                    debug: state.debug,
                 };
             }
 

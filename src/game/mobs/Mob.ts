@@ -20,6 +20,11 @@ export interface Mob extends Movable, Trigger {
     readonly maxHealth: number;
 
     /**
+     * Amount of health points which gives after each move
+     */
+    readonly regenerationSpeed: number;
+
+    /**
      * Mob damage
      */
     readonly damage: number;

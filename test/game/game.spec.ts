@@ -22,6 +22,7 @@ describe('GameWorld', () => {
             canvas,
             context: canvas.getContext('2d')!,
             previousUpdateTime: performance.now(),
+            debug: false,
         });
 
         gameWorld = new GameWorld(eventBus);

@@ -8,26 +8,20 @@ import { State } from '../../states/State';
  * Event handler that shows debug panel on F3 key
  */
 export const DebugInfoEventHandler: () => EventHandler<State> = () => {
-    let show = false;
-
     let lastPressedKey: string | undefined = undefined;
 
     return (state, event) => {
-        if (!isGameState(state)) {
-            return;
-        }
-
         if (event.type === 'keyDown') {
             lastPressedKey = event.event.code;
 
             if (event.event.code === 'F3') {
-                show = !show;
+                state.debug = !state.debug;
 
                 event.event.preventDefault();
             }
         }
 
-        if (event.type !== 'tick' || !show) {
+        if (event.type !== 'tick' || !state.debug) {
             return;
         }
 
@@ -46,13 +40,19 @@ export const DebugInfoEventHandler: () => EventHandler<State> = () => {
 
         const timeDelta = performance.now() - state.previousUpdateTime;
 
-        drawText(ctx, ''
-            + `Time delta: ${Math.round(timeDelta)}\n`
-            + `Ticks per second: ${Math.round(1000 / timeDelta)}\n`
-            + `Player position: ${state.world.player.coordinates}\n`
-            + `Camera offset: ${state.cameraOffset}\n`
-            + `Pressed key: ${lastPressedKey}\n`
-            + '', 5, 5);
+        let text = '';
+
+        text += `Time delta: ${Math.round(timeDelta)}\n`;
+        text += `Ticks per second: ${Math.round(1000 / timeDelta)}\n`;
+
+        if (isGameState(state)) {
+            text += `Player position: ${state.world.player.coordinates}\n`;
+            text += `Camera offset: ${state.cameraOffset}\n`;
+        }
+
+        text += `Pressed key: ${lastPressedKey}\n`;
+
+        drawText(ctx, text, 5, 5);
 
         ctx.restore();
     };

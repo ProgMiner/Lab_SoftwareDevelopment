@@ -17,6 +17,7 @@ export class Mimic extends AbstractMob {
 
     health: number = 5;
     readonly maxHealth: number = 5;
+    readonly regenerationSpeed: number = 0;
 
     damage: number = 2;
     armor: number = 1;
@@ -40,6 +41,7 @@ export class Mimic extends AbstractMob {
     }
 
     constructor(item: Item, coordinates: Coordinates) {
+        // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
         super(coordinates, NO_TEXTURE);
 
         this._item = item;

@@ -24,6 +24,9 @@ export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
         return;
     }
 
+    state.world.updateDistance = state.updateDistance;
+    state.world.debug = state.debug;
+
     if (state.state === GameStateState.COMMON && event.type === 'keyDown') {
         switch (event.event.code) {
             case 'KeyW':
@@ -71,7 +74,6 @@ export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
             state.scale,
         );
 
-        state.world.updateDistance = state.updateDistance;
         state.world.draw(state.context, cameraPosition, state.scale);
 
         if (state.state !== GameStateState.PLAYER_DIE) {

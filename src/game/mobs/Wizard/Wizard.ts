@@ -1,6 +1,7 @@
 import random from 'random';
 
 import { AggressiveBehaviourModel } from '../../behaviour/AggressiveBehaviourModel';
+import { CleverBehaviourModel } from '../../behaviour/CleverBehaviourModel';
 import { loadTexture } from '../../../utils/drawTexture';
 import { Coordinates } from '../../../utils/Coordinates';
 import { shuffleInplace } from '../../../utils/shuffle';
@@ -20,10 +21,12 @@ loadTexture(wizard);
  */
 export class Wizard extends AbstractMob implements Cloneable {
 
-    actualBehaviourModel = new AggressiveBehaviourModel();
+    // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
+    actualBehaviourModel = new CleverBehaviourModel(new AggressiveBehaviourModel());
 
     health: number = 10;
     readonly maxHealth: number = 10;
+    readonly regenerationSpeed: number = 1;
 
     readonly damage: number = 3;
     readonly armor: number = 1;

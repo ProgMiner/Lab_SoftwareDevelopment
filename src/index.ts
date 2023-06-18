@@ -24,6 +24,7 @@ if (canvas instanceof HTMLCanvasElement) {
         canvas,
         context: canvas.getContext('2d')!,
         previousUpdateTime: performance.now(),
+        debug: false,
     };
 
     const eventBus = EventBus<State>(

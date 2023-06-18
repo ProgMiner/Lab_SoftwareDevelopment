@@ -1,5 +1,9 @@
 
 
+type AdjacentType<T extends boolean> = T extends true
+    ? [Coordinates, Coordinates, Coordinates, Coordinates, Coordinates]
+    : [Coordinates, Coordinates, Coordinates, Coordinates];
+
 /**
  * Utility class to represent any 2D point, vector or rectangle
  */
@@ -74,8 +78,20 @@ export class Coordinates {
 
     /**
      * Returns adjacent points (for integer coordinates)
+     *
+     * @param includeThis add this to result
      */
-    adjacent(): [Coordinates, Coordinates, Coordinates, Coordinates] {
+    adjacent(includeThis: boolean = false): AdjacentType<typeof includeThis> {
+        if (includeThis) {
+            return [
+                this,
+                new Coordinates(this.x + 1, this.y),
+                new Coordinates(this.x - 1, this.y),
+                new Coordinates(this.x, this.y + 1),
+                new Coordinates(this.x, this.y - 1),
+            ];
+        }
+
         return [
             new Coordinates(this.x + 1, this.y),
             new Coordinates(this.x - 1, this.y),

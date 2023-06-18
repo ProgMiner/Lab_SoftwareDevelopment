@@ -1,6 +1,6 @@
 import { PassiveBehaviourModel } from './PassiveBehaviourModel';
-import { Coordinates } from '../../utils/Coordinates';
 import { BehaviourModel } from './BehaviourModel';
+import { moveToPoint } from './moveToPoint';
 import { GameWorld } from '../GameWorld';
 import { Movable } from '../Movable';
 
@@ -25,34 +25,14 @@ export class AggressiveBehaviourModel<Self extends Movable> implements Behaviour
     }
 
     onMove(self: Self, world: GameWorld): void {
-        if (self.coordinates.equals(world.player.coordinates)) {
-            return;
-        }
-
         if (!world.isPlayerVisibleFrom(self.coordinates)) {
             return this.noPlayerBehaviour.onMove(self, world);
         }
 
-        const nearestCells = AggressiveBehaviourModel.findNearestCellToPlayer(
-            self.coordinates,
-            world.player.coordinates,
-        );
-
-        for (const cell of nearestCells) {
-            if (self.moveTo(cell, world)) {
-                return;
-            }
-        }
+        moveToPoint(world.player.coordinates, self, world);
     }
 
     clone(): AggressiveBehaviourModel<Self> {
         return new AggressiveBehaviourModel(this.noPlayerBehaviour);
-    }
-
-    private static findNearestCellToPlayer(baseCell: Coordinates, playerCell: Coordinates): Coordinates[] {
-        const candidates: [Coordinates, number][] = baseCell.adjacent()
-            .map(c => [c, c.vectorTo(playerCell).length()]);
-
-        return candidates.sort(([_1, a], [_2, b]) => a - b).map(([c, _]) => c);
     }
 }

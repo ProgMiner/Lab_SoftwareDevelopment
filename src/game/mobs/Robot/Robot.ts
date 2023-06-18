@@ -1,4 +1,5 @@
-import { AggressiveBehaviourModel } from '../../behaviour/AggressiveBehaviourModel';
+import { EnhancedAggressiveBehaviourModel } from '../../behaviour/EnhancedAggressiveBehaviourModel';
+import { CleverBehaviourModel } from '../../behaviour/CleverBehaviourModel';
 import { Coordinates } from '../../../utils/Coordinates';
 import { loadTexture } from '../../../utils/drawTexture';
 import { AbstractMob } from '../AbstractMob';
@@ -15,10 +16,12 @@ loadTexture(robot);
  */
 export class Robot extends AbstractMob {
 
-    actualBehaviourModel = new AggressiveBehaviourModel();
+    // noinspection TypeScriptValidateTypes: WebStorm shows as error, but TypeScript accepts
+    actualBehaviourModel = new CleverBehaviourModel(new EnhancedAggressiveBehaviourModel());
 
     health: number = 10;
     readonly maxHealth: number = 10;
+    readonly regenerationSpeed: number = 2;
 
     readonly damage: number = 5;
     readonly armor: number = 2;
