@@ -25,6 +25,8 @@ class Parser(
             "pwd" to ::PwdCommand,
             "exit" to ::ExitCommand,
             "grep" to ::GrepCommand,
+            "ls" to ::LsCommand,
+            "cd" to ::CdCommand
         )
     }
 
