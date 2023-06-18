@@ -9,7 +9,7 @@ import person from './person.png';
 
 const DEFAULT_MAX_HEALTH = 10;
 const DEFAULT_BASE_DAMAGE = 1;
-const DEFAULT_BASE_ARMOR = 0;
+const DEFAULT_BASE_ARMOR = 1;
 
 loadTexture(person);
 
@@ -48,6 +48,22 @@ export class Player implements GameObject {
     baseArmor: number = DEFAULT_BASE_ARMOR;
 
     /**
+     * Player's experience points
+     */
+    xp: number = 0;
+
+    /**
+     * Player's level
+     */
+    level: number = 1;
+
+    /**
+     * Cost of first level in experience points,
+     * for higher levels calculated using {@link nextLevelCost}
+     */
+    baseLevelCost: number = 1;
+
+    /**
      * Equipped items
      *
      * For each {@link EquipmentType} may be equipped only one item in same time
@@ -55,6 +71,51 @@ export class Player implements GameObject {
      * Uses {@link EquipmentType.MAX_VALUE} as size
      */
     readonly equipment = new Array<Equipment | undefined>(EquipmentType.MAX_VALUE);
+
+    /**
+     * Calculate actual damage
+     */
+    get actualDamage(): number {
+        let result = this.baseDamage * this.level;
+
+        for (const item of this.equipment) {
+            if (item === undefined) {
+                continue;
+            }
+
+            if (item.equipmentType === EquipmentType.SWORD) {
+                result += item.equipmentBonus;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Calculate actual armor
+     */
+    get actualArmor(): number {
+        let result = this.baseArmor * this.level;
+
+        for (const item of this.equipment) {
+            if (item === undefined) {
+                continue;
+            }
+
+            if (item.equipmentType === EquipmentType.ARMOR) {
+                result += item.equipmentBonus;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns cost of next level in experience points
+     */
+    get nextLevelCost(): number {
+        return this.baseLevelCost * Math.pow(this.level, 2);
+    }
 
     /**
      * Heal player on factor of max health
@@ -88,53 +149,15 @@ export class Player implements GameObject {
         return prev;
     }
 
-    /**
-     * Calculate actual damage
-     */
-    actualDamage(): number {
-        let result = this.baseDamage;
-
-        for (const item of this.equipment) {
-            if (item === undefined) {
-                continue;
-            }
-
-            if (item.equipmentType === EquipmentType.SWORD) {
-                result += item.equipmentBonus;
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Calculate actual armor
-     */
-    actualArmor(): number {
-        let result = this.baseArmor;
-
-        for (const item of this.equipment) {
-            if (item === undefined) {
-                continue;
-            }
-
-            if (item.equipmentType === EquipmentType.ARMOR) {
-                result += item.equipmentBonus;
-            }
-        }
-
-        return result;
-    }
-
-    draw(
-        context: CanvasRenderingContext2D,
-        center: Coordinates,
-        scale: Coordinates,
-    ): void {
+    draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void {
         drawTexture(person, context, center, scale);
     }
 
     collides(point: Coordinates): boolean {
         return point.equals(this.coordinates);
+    }
+
+    needUpdate(): boolean {
+        return true;
     }
 }

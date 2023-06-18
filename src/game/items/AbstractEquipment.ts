@@ -1,4 +1,5 @@
 import { Equipment, EquipmentType } from './Equipment';
+import { Texture } from '../../utils/drawTexture';
 import { TexturedItem } from './TexturedItem';
 import { GameWorld } from '../GameWorld';
 
@@ -20,7 +21,7 @@ export abstract class AbstractEquipment extends TexturedItem implements Equipmen
      * @param {EquipmentType} equipmentType equipment type
      * @param {number} equipmentBonus equipment bonus
      */
-    constructor(texture: string, equipmentType: EquipmentType, equipmentBonus: number) {
+    protected constructor(texture: Texture, equipmentType: EquipmentType, equipmentBonus: number) {
         super(texture);
 
         this.equipmentType = equipmentType;

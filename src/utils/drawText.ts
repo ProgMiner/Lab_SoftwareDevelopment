@@ -107,3 +107,21 @@ export const measureText = (
 
     return new Coordinates(width, height);
 };
+
+/**
+ * Format number to draw in in-game text
+ *
+ * @param number number to format
+ * @param signed need to add plus sign, default `false`
+ *
+ * @return formatted number
+ */
+export const formatNumber = (number: number, signed: boolean = false): string => {
+    const result = number.toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+    if (signed && number >= 0) {
+        return '+' + result;
+    }
+
+    return result;
+};

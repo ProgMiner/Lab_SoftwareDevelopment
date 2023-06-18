@@ -4,7 +4,9 @@ import { GameWorldEventHandler } from './core/handlers/GameWorldEventHandler/Gam
 import { ChangePreviousUpdateTimeEventHandler } from './core/handlers/ChangePreviousUpdateTimeEventHandler';
 import { GameInterfaceEventHandler } from './core/handlers/GameInterfaceEventHandler';
 import { DebugInfoEventHandler } from './core/handlers/DebugInfoEventHandler';
+import { PlayerDieEventHandler } from './core/handlers/PlayerDieEventHandler';
 import { MainMenuEventHandler } from './core/handlers/MainMenuEventHandler';
+import { LevelUpEventHandler } from './core/handlers/LevelUpEventHandler';
 import { EventBus } from './core/events/EventBus';
 import { State } from './states/State';
 
@@ -20,7 +22,7 @@ if (canvas instanceof HTMLCanvasElement) {
     const state: State = {
         state: 'mainMenu',
         canvas,
-        context: canvas.getContext('2d')!!,
+        context: canvas.getContext('2d')!,
         previousUpdateTime: performance.now(),
     };
 
@@ -31,6 +33,8 @@ if (canvas instanceof HTMLCanvasElement) {
         MainMenuEventHandler,
         GameWorldEventHandler,
         GameInterfaceEventHandler(),
+        LevelUpEventHandler(),
+        PlayerDieEventHandler,
         DebugInfoEventHandler(),
         ChangePreviousUpdateTimeEventHandler,
     );

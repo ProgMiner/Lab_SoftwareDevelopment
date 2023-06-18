@@ -1,3 +1,4 @@
+import { isGameState } from '../../states/GameState';
 import { EventHandler } from '../events/EventBus';
 import { drawText } from '../../utils/drawText';
 import { State } from '../../states/State';
@@ -12,7 +13,7 @@ export const DebugInfoEventHandler: () => EventHandler<State> = () => {
     let lastPressedKey: string | undefined = undefined;
 
     return (state, event) => {
-        if (state.state !== 'game') {
+        if (!isGameState(state)) {
             return;
         }
 

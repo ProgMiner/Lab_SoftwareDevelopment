@@ -41,6 +41,45 @@ export class Coordinates {
     }
 
     /**
+     * Returns vector from `this` to `that`
+     *
+     * @param that destination of vector
+     *
+     * @return result vector
+     */
+    vectorTo(that: Coordinates): Coordinates {
+        return new Coordinates(that.x - this.x, that.y - this.y);
+    }
+
+    /**
+     * Calculates atan2
+     *
+     * @see Math.atan2
+     */
+    atan2(): number {
+        return Math.atan2(this.y, this.x);
+    }
+
+    /**
+     * Returns rounded coordinates
+     */
+    round(): Coordinates {
+        return new Coordinates(Math.round(this.x), Math.round(this.y));
+    }
+
+    /**
+     * Returns adjacent points (for integer coordinates)
+     */
+    adjacent(): [Coordinates, Coordinates, Coordinates, Coordinates] {
+        return [
+            new Coordinates(this.x + 1, this.y),
+            new Coordinates(this.x - 1, this.y),
+            new Coordinates(this.x, this.y + 1),
+            new Coordinates(this.x, this.y - 1),
+        ];
+    }
+
+    /**
      * Check is equals to other coordinates object
      *
      * @param that object to check with

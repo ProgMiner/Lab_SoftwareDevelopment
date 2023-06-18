@@ -1,14 +1,29 @@
 import { Coordinates, MutableCoordinates } from '../utils/Coordinates';
+import { CommonGameState } from './CommonGameState';
+import { PlayerDeadState } from './PlayerDeadState';
 import { GameWorld } from '../game/GameWorld';
-import { BaseState } from './State';
+import { BaseState, State } from './State';
 
 
 /**
- * Type of event bus state when in game
+ * Type of all states of game state
+ *
+ * Used to check is state is game state
+ *
+ * @see isGameState
+ */
+export enum GameStateState {
+
+    COMMON = 'game',
+    PLAYER_DIE = 'playerDie',
+}
+
+/**
+ * Type of all event bus states when player in game
  *
  * Contains all information, needed to more than one event handler
  */
-export interface GameState extends BaseState<'game'> {
+export interface BaseGameState<State extends GameStateState> extends BaseState<State> {
 
     /**
      * Current game world
@@ -26,7 +41,21 @@ export interface GameState extends BaseState<'game'> {
     scale: Coordinates;
 
     /**
+     * Maximum distance from object to player where object will be updated, in game world cells
+     */
+    updateDistance: number;
+
+    /**
      * Current offset of camera, used for camera animation
      */
     readonly cameraOffset: MutableCoordinates;
 }
+
+/**
+ * Type of all game states
+ */
+export type GameState = CommonGameState | PlayerDeadState;
+
+// noinspection TypeScriptValidateTypes
+export const isGameState = (state: State): state is GameState =>
+    Object.values<State['state']>(GameStateState).includes(state.state);

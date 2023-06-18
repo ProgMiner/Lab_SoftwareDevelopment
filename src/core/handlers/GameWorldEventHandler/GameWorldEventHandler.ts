@@ -1,6 +1,6 @@
+import { GameState, GameStateState, isGameState } from '../../../states/GameState';
 import { drawTexture, loadTexture } from '../../../utils/drawTexture';
 import { Coordinates } from '../../../utils/Coordinates';
-import { GameState } from '../../../states/GameState';
 import { EventHandler } from '../../events/EventBus';
 import { State } from '../../../states/State';
 
@@ -20,11 +20,11 @@ loadTexture(floorTexture);
  * - W/A/S/D - move player up/left/down/right
  */
 export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
-    if (state.state !== 'game') {
+    if (!isGameState(state)) {
         return;
     }
 
-    if (event.type === 'keyDown') {
+    if (state.state === GameStateState.COMMON && event.type === 'keyDown') {
         switch (event.event.code) {
             case 'KeyW':
                 if (state.world.movePlayer(new Coordinates(0, -1))) {
@@ -71,9 +71,12 @@ export const GameWorldEventHandler: EventHandler<State> = (state, event) => {
             state.scale,
         );
 
+        state.world.updateDistance = state.updateDistance;
         state.world.draw(state.context, cameraPosition, state.scale);
 
-        drawDarkness(state);
+        if (state.state !== GameStateState.PLAYER_DIE) {
+            drawDarkness(state);
+        }
     }
 };
 

@@ -21,6 +21,8 @@ export interface Trigger extends GameObject {
  * Checks is game object a trigger
  *
  * @param object object to check
+ *
+ * @return is {@link Trigger}
  */
 export const isTrigger = (object: GameObject): object is Trigger => {
     return 'onStep' in object;

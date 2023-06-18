@@ -1,4 +1,4 @@
-import { drawTexture } from '../../utils/drawTexture';
+import { drawTexture, Texture } from '../../utils/drawTexture';
 import { Coordinates } from '../../utils/Coordinates';
 import { GameWorld } from '../GameWorld';
 import { Item } from './Item';
@@ -14,14 +14,14 @@ export abstract class TexturedItem implements Item {
      *
      * @protected
      */
-    protected readonly texture: string;
+    protected readonly texture: Texture;
 
     /**
      * @param texture item texture
      *
      * @protected
      */
-    protected constructor(texture: string) {
+    protected constructor(texture: Texture) {
         this.texture = texture;
     }
 

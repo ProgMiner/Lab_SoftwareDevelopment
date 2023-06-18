@@ -3,6 +3,7 @@ import { Random } from 'random';
 import { ItemGenerator, WorldGenerator } from './Generator';
 import { delayPromise } from '../../utils/delayPromise';
 import { Coordinates } from '../../utils/Coordinates';
+import { EventBus } from '../../core/events/EventBus';
 import { DroppedItem } from '../DroppedItem';
 import { sample } from '../../utils/shuffle';
 import { GameObject } from '../GameObject';
@@ -31,6 +32,8 @@ class Box {
  */
 export class BoxedWorldGenerator implements WorldGenerator {
 
+    private readonly eventBus: EventBus;
+
     private readonly maxDepth: number;
     private readonly maxItemsInRoom: number;
     private readonly boxSize: Coordinates;
@@ -38,12 +41,20 @@ export class BoxedWorldGenerator implements WorldGenerator {
     private readonly itemGenerator: ItemGenerator;
 
     /**
+     * @param eventBus event bus to set in world
      * @param maxDepth max depth of generating tree
      * @param maxItemsInRoom max amount of items in each room
      * @param boxSize box size (width and height)
      * @param itemGenerator item generator
      */
-    constructor(maxDepth: number, maxItemsInRoom: number, boxSize: Coordinates, itemGenerator: ItemGenerator) {
+    constructor(
+        eventBus: EventBus,
+        maxDepth: number,
+        maxItemsInRoom: number,
+        boxSize: Coordinates,
+        itemGenerator: ItemGenerator,
+    ) {
+        this.eventBus = eventBus;
         this.maxDepth = maxDepth;
         this.maxItemsInRoom = maxItemsInRoom;
         this.boxSize = boxSize;
@@ -81,13 +92,13 @@ export class BoxedWorldGenerator implements WorldGenerator {
             const baseY = (box.coordinates.y - minBoxCoordinates.y) * (this.boxSize.y + 1);
 
             for (let x = 0; x <= this.boxSize.x + 1; ++x) {
-                walls.matrix[baseY]!![baseX + x] = true;
-                walls.matrix[baseY + this.boxSize.y + 1]!![baseX + x] = true;
+                walls.matrix[baseY]![baseX + x] = true;
+                walls.matrix[baseY + this.boxSize.y + 1]![baseX + x] = true;
             }
 
             for (let y = 0; y <= this.boxSize.y + 1; ++y) {
-                walls.matrix[baseY + y]!![baseX] = true;
-                walls.matrix[baseY + y]!![baseX + this.boxSize.x + 1] = true;
+                walls.matrix[baseY + y]![baseX] = true;
+                walls.matrix[baseY + y]![baseX + this.boxSize.x + 1] = true;
             }
         }
 
@@ -106,10 +117,10 @@ export class BoxedWorldGenerator implements WorldGenerator {
                     const x = (coords.x - minBoxCoordinates.x) * (this.boxSize.x + 1) + ~~(this.boxSize.x / 2) + 1;
                     const y = (coords.y - minBoxCoordinates.y + 1) * (this.boxSize.y + 1);
 
-                    walls.matrix[y]!![x] = false;
+                    walls.matrix[y]![x] = false;
 
                     if (this.boxSize.x % 2 === 0) {
-                        walls.matrix[y]!![x - 1] = false;
+                        walls.matrix[y]![x - 1] = false;
                     }
                 }
 
@@ -119,16 +130,16 @@ export class BoxedWorldGenerator implements WorldGenerator {
                     const x = (coords.x - minBoxCoordinates.x + 1) * (this.boxSize.x + 1);
                     const y = (coords.y - minBoxCoordinates.y) * (this.boxSize.y + 1) + ~~(this.boxSize.y / 2) + 1;
 
-                    walls.matrix[y]!![x] = false;
+                    walls.matrix[y]![x] = false;
 
                     if (this.boxSize.y % 2 === 0) {
-                        walls.matrix[y - 1]!![x] = false;
+                        walls.matrix[y - 1]![x] = false;
                     }
                 }
             }
         }
 
-        const world = new GameWorld();
+        const world = new GameWorld(this.eventBus);
         world.objects.push(walls);
 
         for (const box of boxes) {
@@ -169,7 +180,7 @@ export class BoxedWorldGenerator implements WorldGenerator {
 
         let counter = 1;
         while (queue.length > 0) {
-            const [index, depth] = queue.pop()!!;
+            const [index, depth] = queue.pop()!;
 
             if (!remaining.has(index)) {
                 continue;
@@ -177,7 +188,7 @@ export class BoxedWorldGenerator implements WorldGenerator {
 
             remaining.delete(index);
 
-            const coords = indexToCoords[index]!!;
+            const coords = indexToCoords[index]!;
 
             const itemsNumber = random.integer(0, this.maxItemsInRoom);
             const items = await Promise.all(sample(itemsNumber, range(this.boxSize.x).flatMap(x =>
@@ -189,12 +200,7 @@ export class BoxedWorldGenerator implements WorldGenerator {
             if (depth < this.maxDepth) {
                 const doorsNumber = doorsNumberGenerator();
 
-                const boxDoors = sample(doorsNumber, [
-                    new Coordinates(coords.x - 1, coords.y),
-                    new Coordinates(coords.x + 1, coords.y),
-                    new Coordinates(coords.x, coords.y - 1),
-                    new Coordinates(coords.x, coords.y + 1),
-                ], random);
+                const boxDoors = sample(doorsNumber, coords.adjacent(), random);
 
                 for (const door of boxDoors) {
                     doors.add(stringifyDoor(coords, door));

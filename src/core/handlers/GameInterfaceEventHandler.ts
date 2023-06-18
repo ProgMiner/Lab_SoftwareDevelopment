@@ -1,6 +1,8 @@
 import { INVENTORY_SIZE, ITEM_SCALE_FACTOR } from '../../game/Inventory/Inventory';
+import { drawText, EMOJI_FONT_FAMILY, formatNumber } from '../../utils/drawText';
 import { Equipment, EquipmentType } from '../../game/items/Equipment';
-import { drawText, EMOJI_FONT_FAMILY } from '../../utils/drawText';
+import { GameStateState, isGameState } from '../../states/GameState';
+import { drawBar, HEALTH_BAR_COLOR } from '../../utils/drawBar';
 import { Coordinates } from '../../utils/Coordinates';
 import { Player } from '../../game/Player/Player';
 import { EventHandler } from '../events/EventBus';
@@ -53,13 +55,26 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
     };
 
     return (state, event) => {
-        if (state.state !== 'game') {
+        if (!isGameState(state)) {
             return;
         }
 
         const { canvas, context, world, previousUpdateTime } = state;
 
         if (event.type === 'keyDown') {
+            if (event.event.code === 'Escape') {
+                return {
+                    state: 'mainMenu',
+                    canvas,
+                    context,
+                    previousUpdateTime,
+                };
+            }
+
+            if (state.state !== GameStateState.COMMON) {
+                return;
+            }
+
             if (event.event.code === 'Enter') {
                 world.player.inventory.useSelectedItem(world);
                 return;
@@ -68,15 +83,6 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
             if (event.event.code === 'Backspace') {
                 world.player.inventory.dropSelectedItem(world);
                 return;
-            }
-
-            if (event.event.code === 'Escape') {
-                return {
-                    state: 'mainMenu',
-                    canvas,
-                    context,
-                    previousUpdateTime,
-                };
             }
 
             const oldSelectedItem = world.player.inventory.selectedItem;
@@ -133,17 +139,25 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
         }
 
         if (event.type === 'tick') {
-            animateHealthBar(world.player, previousUpdateTime);
+            const { player } = world;
 
-            world.player.inventory.draw(
+            animateHealthBar(player, previousUpdateTime);
+
+            player.inventory.draw(
                 context,
                 new Coordinates(canvas.width / 2, canvas.height - INVENTORY_SCALE / 2 - GAP),
                 new Coordinates(INVENTORY_SCALE, INVENTORY_SCALE),
             )
 
-            drawHealthBar(healthBarValue, canvas, context);
+            drawBar(
+                healthBarValue,
+                context,
+                new Coordinates(canvas.width / 2, canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT / 2),
+                new Coordinates(INVENTORY_SCALE * INVENTORY_SIZE, HEALTH_BAR_HEIGHT),
+                HEALTH_BAR_COLOR,
+            );
 
-            drawEquipment(world.player, canvas, context);
+            drawEquipment(player, canvas, context);
 
             context.save();
 
@@ -151,9 +165,11 @@ export const GameInterfaceEventHandler: () => EventHandler<State> = () => {
             context.font = STATS_FONT;
             drawText(
                 context,
-                `❤ ${world.player.health} / ${world.player.maxHealth}  |  `
-                + `👊 ${world.player.actualDamage()}  |  `
-                + `🛡️ ${world.player.actualArmor()}`,
+                `❤ ${formatNumber(player.health)} / ${formatNumber(player.maxHealth)}  |  `
+                + `👊 ${formatNumber(player.actualDamage)}  |  `
+                + `🛡️ ${formatNumber(player.actualArmor)}  |  `
+                + `✨ ${formatNumber(player.xp)} / ${formatNumber(player.nextLevelCost)}  |  `
+                + `⬆️ ${formatNumber(player.level)}`,
                 canvas.width / 2,
                 canvas.height - INVENTORY_SCALE - 3 * GAP - HEALTH_BAR_HEIGHT - STATS_HEIGHT,
                 { centerWidth: true },
@@ -205,7 +221,7 @@ const drawEquipment = (player: Player, canvas: HTMLCanvasElement, context: Canva
 
         drawText(
             context,
-            (item.equipmentBonus < 0 ? '' : '+') + item.equipmentBonus
+            formatNumber(item.equipmentBonus, true)
             + ' ' + equipmentTypeIcon(item.equipmentType),
             x + itemScale / 2 + GAP,
             y,
@@ -215,53 +231,3 @@ const drawEquipment = (player: Player, canvas: HTMLCanvasElement, context: Canva
         context.restore();
     }
 }
-
-const drawHealthBar = (value: number, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) => {
-    context.save();
-
-    context.fillStyle = '#ccc';
-    context.fillRect(
-        canvas.width / 2 - INVENTORY_SCALE * INVENTORY_SIZE / 2,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        INVENTORY_SCALE * INVENTORY_SIZE,
-        HEALTH_BAR_HEIGHT,
-    );
-
-    context.fillStyle = '#e74236';
-    context.fillRect(
-        canvas.width / 2 - INVENTORY_SCALE * INVENTORY_SIZE / 2,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        INVENTORY_SCALE * INVENTORY_SIZE * value,
-        HEALTH_BAR_HEIGHT,
-    );
-
-    const gradient = context.createLinearGradient(
-        0,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        0,
-        canvas.height - INVENTORY_SCALE - 2 * GAP,
-    )
-
-    gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-    gradient.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
-    context.fillStyle = gradient;
-
-    context.fillRect(
-        canvas.width / 2 - INVENTORY_SCALE * INVENTORY_SIZE / 2,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        INVENTORY_SCALE * INVENTORY_SIZE,
-        HEALTH_BAR_HEIGHT,
-    );
-
-    context.strokeStyle = '#000';
-    context.lineWidth = 3;
-
-    context.strokeRect(
-        canvas.width / 2 - INVENTORY_SCALE * INVENTORY_SIZE / 2,
-        canvas.height - INVENTORY_SCALE - 2 * GAP - HEALTH_BAR_HEIGHT,
-        INVENTORY_SCALE * INVENTORY_SIZE,
-        HEALTH_BAR_HEIGHT,
-    );
-
-    context.restore();
-};

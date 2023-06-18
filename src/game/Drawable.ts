@@ -13,9 +13,5 @@ export interface Drawable {
      * @param center center of drawing in pixels
      * @param scale scale of drawing in pixels (abstract, uses on purpose)
      */
-    draw(
-        context: CanvasRenderingContext2D,
-        center: Coordinates,
-        scale: Coordinates,
-    ): void;
+    draw(context: CanvasRenderingContext2D, center: Coordinates, scale: Coordinates): void;
 }
